@@ -3,6 +3,7 @@
 
 import styled from "@emotion/styled";
 import React, { KeyboardEvent, useState } from "react";
+import { ReactComponent as CheckedIcon } from "../../../assets/icons8-done.svg";
 
 export type ISelectOption = {
   label: string;
@@ -121,13 +122,11 @@ const Option = styled.li<IOption>`
   padding: 0.25em 0.5em;
   cursor: pointer;
   background-color: ${({ isSelected, isHighlightedIndex }) =>
-    isSelected
-      ? "hsl(200, 100%, 70%)"
-      : isHighlightedIndex
-      ? "hsl(200, 100%, 50%)"
-      : "transparent"};
-  color: ${({ isSelected, isHighlightedIndex }) =>
-    !isSelected && isHighlightedIndex ? "white" : ""};
+    isHighlightedIndex ? "hsl(200, 100%, 50%)" : "transparent"};
+  color: ${({ isHighlightedIndex }) => (isHighlightedIndex ? "white" : "")};
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 `;
 
 const SelectedOptionBadge = styled.button`
@@ -158,7 +157,7 @@ const SelectedOptionBadge = styled.button`
   }
 `;
 
-const SingleMultiSelectWithBadges = ({
+const MultiSelectWithCheckbox = ({
   multiple,
   value,
   options,
@@ -166,7 +165,7 @@ const SingleMultiSelectWithBadges = ({
 }: IProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number>(0);
 
   const clearOptions = () => {
     if (multiple) {
@@ -208,7 +207,7 @@ const SingleMultiSelectWithBadges = ({
       case "Space":
         if (multiple) setIsOpen(true);
         else setIsOpen((prev: boolean) => !prev);
-        if (isOpen) selectOption(options[highlightedIndex]);
+        if (isOpen) selectOption(options[hoveredIndex]);
         break;
 
       case "ArrowUp":
@@ -219,9 +218,9 @@ const SingleMultiSelectWithBadges = ({
         }
 
         const newHighlightedIndex =
-          highlightedIndex + (event.code === "ArrowDown" ? 1 : -1);
+          hoveredIndex + (event.code === "ArrowDown" ? 1 : -1);
         if (newHighlightedIndex >= 0 && newHighlightedIndex < options.length) {
-          setHighlightedIndex(newHighlightedIndex);
+          setHoveredIndex(newHighlightedIndex);
         }
         break;
       }
@@ -237,11 +236,11 @@ const SingleMultiSelectWithBadges = ({
       tabIndex={0}
       onClick={() => {
         setIsOpen((prev: boolean) => !prev);
-        setHighlightedIndex(0);
+        setHoveredIndex(0);
       }}
       onBlur={() => {
         setIsOpen(false);
-        setHighlightedIndex(0);
+        setHoveredIndex(0);
       }}
       onKeyDown={keyboardHandler}
     >
@@ -286,11 +285,27 @@ const SingleMultiSelectWithBadges = ({
                 if (!multiple) setIsOpen(false);
               }}
               onMouseEnter={() => {
-                setHighlightedIndex(index);
+                setHoveredIndex(index);
               }}
               isSelected={isOptionSelected(option)}
-              isHighlightedIndex={highlightedIndex === index}
+              isHighlightedIndex={hoveredIndex === index}
             >
+              {/* TODO: Create checkbox without input element */}
+              <div
+                role="checkbox"
+                aria-checked={false}
+                style={{
+                  width: "1rem",
+                  height: "1rem",
+                  border: "1px solid black",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  overflow: "hidden",
+                }}
+              >
+                {isOptionSelected(option) && <CheckedIcon />}
+              </div>
               {option.label}
             </Option>
           );
@@ -300,4 +315,4 @@ const SingleMultiSelectWithBadges = ({
   );
 };
 
-export default SingleMultiSelectWithBadges;
+export default MultiSelectWithCheckbox;
