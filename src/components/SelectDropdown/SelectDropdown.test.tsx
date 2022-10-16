@@ -9,23 +9,29 @@ const SelectRender = () => {
     <SelectDropdown
       selectedRegion={selectedRegion}
       setSelectedRegion={setSelectedRegion}
-      options={[]}
+      options={[
+        { value: "Africa", displayValue: "Africa" },
+        { value: "America", displayValue: "America" },
+        { value: "Asia", displayValue: "Asia" },
+        { value: "Europe", displayValue: "Europe" },
+        { value: "Oceania", displayValue: "Oceania" },
+      ]}
     />
   );
 };
 
 describe("Select Component", () => {
-  test("should render select component", () => {
+  test("should render select component", async () => {
     render(<SelectRender />);
 
-    expect(screen.getByTestId("select-container")).toBeInTheDocument();
+    expect(await screen.findByTestId("select-container")).toBeInTheDocument();
   });
 
   test("should render select field and expand arrow", async () => {
     render(<SelectRender />);
 
-    expect(screen.getByText(/filter by region/i)).toBeInTheDocument();
-    expect(screen.getByAltText(/expand/i)).toBeInTheDocument();
+    expect(await screen.findByTestId(/select-field/i)).toBeInTheDocument();
+    expect(await screen.findByAltText(/expand/i)).toBeInTheDocument();
   });
 
   test("should display dropdown after clicking on expand arrow", async () => {
