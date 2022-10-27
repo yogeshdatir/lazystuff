@@ -1,17 +1,42 @@
 import React from "react";
 import StepFormWrapper from "../StepFormWrapper";
 
-interface Props {}
+interface IUserData {
+  firstName: string;
+  lastName: string;
+  age: string;
+}
 
-const UserForm = (props: Props) => {
+interface Props {
+  formData: IUserData;
+  updateFormData: (formFields: Partial<IUserData>) => void;
+}
+
+const UserForm = ({ formData, updateFormData }: Props) => {
   return (
     <StepFormWrapper title="User Form">
       <label>First Name</label>
-      <input type="text" required autoFocus />
+      <input
+        type="text"
+        required
+        autoFocus
+        value={formData.firstName}
+        onChange={(e) => updateFormData({ firstName: e.target.value })}
+      />
       <label>Last Name</label>
-      <input type="text" required />
+      <input
+        type="text"
+        required
+        value={formData.lastName}
+        onChange={(e) => updateFormData({ lastName: e.target.value })}
+      />
       <label>Age</label>
-      <input type="number" min={1} required />
+      <input
+        type="text"
+        required
+        value={formData.age}
+        onChange={(e) => updateFormData({ age: e.target.value })}
+      />
     </StepFormWrapper>
   );
 };

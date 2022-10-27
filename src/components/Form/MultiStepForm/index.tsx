@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import useMultiStepForm from "./hooks/useMultiStepForm";
 import AddressForm from "./stepForms/AddressForm";
 import UserForm from "./stepForms/UserForm";
@@ -6,21 +6,61 @@ import LoginForm from "./stepForms/LoginForm";
 
 interface Props {}
 
+interface IFormData {
+  firstName: string;
+  lastName: string;
+  age: string;
+  street: string;
+  city: string;
+  state: string;
+  pinCode: string;
+  email: string;
+  password: string;
+}
+
+const INITIAL_DATA = {
+  firstName: "",
+  lastName: "",
+  age: "",
+  street: "",
+  city: "",
+  state: "",
+  pinCode: "",
+  email: "",
+  password: "",
+};
+
 const MultiStepForm = (props: Props) => {
-  const {
-    currentStepIndex,
-    step,
-    steps,
-    back,
-    next,
-    goTo,
-    isFirstStep,
-    isLastStep,
-  } = useMultiStepForm([<UserForm />, <AddressForm />, <LoginForm />]);
+  const [multiStepFormData, setMultiStepFormData] =
+    useState<IFormData>(INITIAL_DATA);
+
+  const updateMultiStepFormData = (formFields: Partial<IFormData>) => {
+    setMultiStepFormData((prevFormData: IFormData) => ({
+      ...prevFormData,
+      ...formFields,
+    }));
+  };
+
+  const { currentStepIndex, step, steps, back, next, isFirstStep, isLastStep } =
+    useMultiStepForm([
+      <UserForm
+        formData={multiStepFormData}
+        updateFormData={updateMultiStepFormData}
+      />,
+      <AddressForm
+        formData={multiStepFormData}
+        updateFormData={updateMultiStepFormData}
+      />,
+      <LoginForm
+        formData={multiStepFormData}
+        updateFormData={updateMultiStepFormData}
+      />,
+    ]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    next();
+    if (!isLastStep) return next();
+    alert(`FormData: ${JSON.stringify(multiStepFormData)}`);
   };
 
   return (
@@ -31,6 +71,7 @@ const MultiStepForm = (props: Props) => {
         padding: "2rem",
         margin: "1rem",
         borderRadius: "0.5rem",
+        maxWidth: "max-content",
       }}
     >
       <form onSubmit={handleSubmit}>
