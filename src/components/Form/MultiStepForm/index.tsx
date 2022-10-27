@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import useMultiStepForm from "./hooks/useMultiStepForm";
 import AddressForm from "./stepForms/AddressForm";
 import UserForm from "./stepForms/UserForm";
@@ -17,6 +17,12 @@ const MultiStepForm = (props: Props) => {
     isFirstStep,
     isLastStep,
   } = useMultiStepForm([<UserForm />, <AddressForm />, <LoginForm />]);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    next();
+  };
+
   return (
     <div
       style={{
@@ -27,7 +33,7 @@ const MultiStepForm = (props: Props) => {
         borderRadius: "0.5rem",
       }}
     >
-      <form>
+      <form onSubmit={handleSubmit}>
         <div
           style={{
             position: "absolute",
@@ -51,9 +57,7 @@ const MultiStepForm = (props: Props) => {
               Back
             </button>
           )}
-          <button type="button" onClick={next}>
-            {isLastStep ? "Finish" : "Next"}
-          </button>
+          <button type="submit">{isLastStep ? "Finish" : "Next"}</button>
         </div>
       </form>
     </div>
