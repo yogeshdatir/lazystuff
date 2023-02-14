@@ -1,9 +1,10 @@
 // Tutorial: https://youtu.be/bAJlYgeovlg
 // Repo: https://github.com/WebDevSimplified/react-select
 
-import styled from "@emotion/styled";
-import React, { KeyboardEvent, useState } from "react";
-import { ReactComponent as CheckedIcon } from "../../../assets/icons8-done.svg";
+import styled from '@emotion/styled';
+import React, { KeyboardEvent, MouseEvent, useRef, useState } from 'react';
+import { ReactComponent as CheckedIcon } from '../../../assets/icons8-done.svg';
+import useClickOutside from '../../../hooks/useClickOutside';
 
 export type ISelectOption = {
   label: string;
@@ -31,6 +32,7 @@ type SingleSelectProps = {
 
 type IProps = {
   options: ISelectOption[];
+  placeholder?: string | number;
 } & (SingleSelectProps | MultiSelectProps);
 
 const Container = styled.div`
@@ -40,10 +42,6 @@ const Container = styled.div`
   border: 0.05em solid #777;
   border-radius: 0.25em;
   outline: none;
-
-  :focus {
-    border-color: hsl(200, 100%, 50%);
-  }
 `;
 
 const SelectBox = styled.div`
@@ -54,6 +52,12 @@ const SelectBox = styled.div`
   padding: 0.5em;
   cursor: pointer;
   box-sizing: border-box;
+  border-radius: 0.25em;
+
+  :focus,
+  :focus-visible {
+    outline: 1.5px solid hsl(200, 100%, 50%);
+  }
 `;
 
 const SelectedValueText = styled.span`
@@ -61,6 +65,11 @@ const SelectedValueText = styled.span`
   display: flex;
   gap: 0.5em;
   flex-wrap: wrap;
+`;
+
+const ActionsWrapper = styled.div`
+  display: flex;
+  margin-left: auto;
 `;
 
 const ClearButton = styled.button`
@@ -71,6 +80,11 @@ const ClearButton = styled.button`
   cursor: pointer;
   padding: 0;
   font-size: 1.25em;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   :focus,
   :hover {
@@ -92,6 +106,22 @@ const Caret = styled.div`
   cursor: pointer;
 `;
 
+const CaretWrapper = styled.div`
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :focus,
+  :hover {
+    div {
+      border-top-color: #222;
+      scale: 1.1;
+    }
+  }
+`;
+
 interface IOptionBox {
   show: boolean;
 }
@@ -101,7 +131,7 @@ const OptionsBox = styled.ul<IOptionBox>`
   margin: 0;
   padding: 0;
   list-style: none;
-  display: ${({ show }) => (show ? "block" : "none")};
+  display: ${({ show }) => (show ? 'block' : 'none')};
   max-height: 15em;
   overflow-y: auto;
   border: 0.05em solid #777;
@@ -122,8 +152,8 @@ const Option = styled.li<IOption>`
   padding: 0.25em 0.5em;
   cursor: pointer;
   background-color: ${({ isSelected, isHighlightedIndex }) =>
-    isHighlightedIndex ? "hsl(200, 100%, 50%)" : "transparent"};
-  color: ${({ isHighlightedIndex }) => (isHighlightedIndex ? "white" : "")};
+    isHighlightedIndex ? 'hsl(200, 100%, 50%)' : 'transparent'};
+  color: ${({ isHighlightedIndex }) => (isHighlightedIndex ? 'white' : '')};
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -157,22 +187,74 @@ const SelectedOptionBadge = styled.button`
   }
 `;
 
+const SearchWrapper = styled.div`
+  padding: 0.25em 0.5em;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  border-radius: 2px;
+  border: 0.05em solid #777;
+
+  :focus-visible {
+    outline: 1.5px solid hsl(200, 100%, 50%);
+  }
+`;
+
+const CustomPlaceholderText = styled.span`
+  color: gray;
+`;
+
+// TODO: Add keyboard accessibility to search input
+// TODO: Add select all feature
+// TODO: Add options groups
+// TODO: Add select all for option groups
+// TODO: Add async await
+// TODO: Add empty state option
+// TODO: Bug: Pressing enter on clearOption icon clears the selections but if user presses down arrow and selects option then it doesn't work and dropdown is closed
+
+const DEFAULT_PLACEHOLDER_COPY = `Select an option...`;
 const MultiSelectWithCheckbox = ({
   multiple,
   value,
   options,
   onChange,
+  placeholder = DEFAULT_PLACEHOLDER_COPY,
 }: IProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [hoveredIndex, setHoveredIndex] = useState<number>(0);
 
-  const clearOptions = () => {
+  const wrapperRef = useRef(null);
+  useClickOutside(wrapperRef, () => {
+    if (isOpen) setIsOpen(!isOpen);
+  });
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [filteredOptions, setFilteredOptions] = useState<ISelectOption[]>([]);
+
+  const clearOptions = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     if (multiple) {
       onChange([]);
     } else {
       onChange(undefined);
     }
+  };
+
+  const filterOptions = (searchTermArg: string | number) => {
+    const filteredOpts = options.filter((option: ISelectOption) => {
+      if (
+        option.label
+          .toString()
+          .toLowerCase()
+          .includes(searchTermArg.toString().toLowerCase())
+      )
+        return option;
+      return null;
+    });
+    setFilteredOptions([...filteredOpts]);
   };
 
   const isOptionSelected = (option: ISelectOption) => {
@@ -203,116 +285,139 @@ const MultiSelectWithCheckbox = ({
 
   const keyboardHandler = (event: KeyboardEvent<HTMLDivElement>) => {
     switch (event.code) {
-      case "Enter":
-      case "Space":
+      case 'Enter':
+      case 'NumpadEnter':
+      case 'Space':
         if (multiple) setIsOpen(true);
         else setIsOpen((prev: boolean) => !prev);
         if (isOpen) selectOption(options[hoveredIndex]);
         break;
 
-      case "ArrowUp":
-      case "ArrowDown": {
+      case 'ArrowUp':
+      case 'ArrowDown': {
         if (!isOpen) {
           setIsOpen(true);
           break;
         }
 
         const newHighlightedIndex =
-          hoveredIndex + (event.code === "ArrowDown" ? 1 : -1);
+          hoveredIndex + (event.code === 'ArrowDown' ? 1 : -1);
         if (newHighlightedIndex >= 0 && newHighlightedIndex < options.length) {
           setHoveredIndex(newHighlightedIndex);
         }
         break;
       }
 
-      case "Escape":
+      case 'Escape':
+      case 'Tab':
         setIsOpen(false);
         break;
     }
   };
 
+  const renderOptions = (optionList: ISelectOption[]) => {
+    return optionList.map((option: ISelectOption, index: number) => {
+      return (
+        <Option
+          key={option.value}
+          value={option.value}
+          onMouseDown={() => {
+            selectOption(option);
+            if (!multiple) setIsOpen(false);
+          }}
+          onMouseEnter={() => {
+            setHoveredIndex(index);
+          }}
+          isSelected={isOptionSelected(option)}
+          isHighlightedIndex={hoveredIndex === index}
+        >
+          <div
+            role="checkbox"
+            aria-checked={false}
+            style={{
+              width: '1rem',
+              height: '1rem',
+              border: '1px solid black',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden',
+            }}
+          >
+            {isOptionSelected(option) && <CheckedIcon />}
+          </div>
+          {option.label}
+        </Option>
+      );
+    });
+  };
+
+  // * Note: closing dropdown using onBlur is a spoiler specially for multiselect.
   return (
-    <Container
-      tabIndex={0}
-      onClick={() => {
-        setIsOpen((prev: boolean) => !prev);
-        setHoveredIndex(0);
-      }}
-      onBlur={() => {
-        setIsOpen(false);
-        setHoveredIndex(0);
-      }}
-      onKeyDown={keyboardHandler}
-    >
-      <SelectBox>
+    <Container ref={wrapperRef}>
+      <SelectBox
+        tabIndex={0}
+        onClick={() => {
+          setIsOpen((prev: boolean) => !prev);
+          setHoveredIndex(0);
+        }}
+        onKeyDown={keyboardHandler}
+      >
         <SelectedValueText>
-          {multiple
-            ? value.map((selectedOption: ISelectOption) => (
+          {multiple ? (
+            value.length ? (
+              value.map((selectedOption: ISelectOption) => (
                 <SelectedOptionBadge
                   key={selectedOption.value}
                   onClick={(e) => {
-                    e.stopPropagation();
                     selectOption(selectedOption);
                   }}
                 >
                   {selectedOption.label}
-
                   <span className="remove-btn">&times;</span>
                 </SelectedOptionBadge>
               ))
-            : value?.label}
+            ) : (
+              <CustomPlaceholder />
+            )
+          ) : (
+            value?.label || <CustomPlaceholder />
+          )}
         </SelectedValueText>
-        <ClearButton
-          onClick={(e) => {
-            e.stopPropagation();
-            clearOptions();
-          }}
-        >
-          &times;
-        </ClearButton>
-        <Divider />
-        <Caret></Caret>
+        <ActionsWrapper>
+          <ClearButton onClick={clearOptions}>&times;</ClearButton>
+          <Divider />
+          <CaretWrapper>
+            <Caret />
+          </CaretWrapper>
+        </ActionsWrapper>
       </SelectBox>
       <OptionsBox show={isOpen}>
-        {options.map((option: ISelectOption, index: number) => {
-          return (
-            <Option
-              key={option.value}
-              value={option.value}
-              onClick={(e) => {
-                e.stopPropagation();
-                selectOption(option);
-                if (!multiple) setIsOpen(false);
-              }}
-              onMouseEnter={() => {
-                setHoveredIndex(index);
-              }}
-              isSelected={isOptionSelected(option)}
-              isHighlightedIndex={hoveredIndex === index}
-            >
-              {/* TODO: Create checkbox without input element */}
-              <div
-                role="checkbox"
-                aria-checked={false}
-                style={{
-                  width: "1rem",
-                  height: "1rem",
-                  border: "1px solid black",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  overflow: "hidden",
-                }}
-              >
-                {isOptionSelected(option) && <CheckedIcon />}
-              </div>
-              {option.label}
-            </Option>
-          );
-        })}
+        <SearchWrapper>
+          <SearchInput
+            tabIndex={0}
+            name="search"
+            type="search"
+            value={searchTerm}
+            placeholder="Search..."
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              filterOptions(e.target.value);
+            }}
+          />
+        </SearchWrapper>
+        {renderOptions(!!filteredOptions.length ? filteredOptions : options)}
       </OptionsBox>
     </Container>
   );
 };
+
+type ICustomPlaceholderProps = Pick<IProps, 'placeholder'>;
+
+function CustomPlaceholder({
+  placeholder = DEFAULT_PLACEHOLDER_COPY,
+}: ICustomPlaceholderProps) {
+  return <CustomPlaceholderText>{placeholder}</CustomPlaceholderText>;
+}
 
 export default MultiSelectWithCheckbox;

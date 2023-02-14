@@ -1,14 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 import {
   ArrowIcon,
   Dropdown,
   OptionItem,
   OptionsBox,
   SelectBox,
-} from "./SelectDropdown.styled";
-import ArrowPng from "../../assets/icons8-expand-arrow-50 dark.png";
+} from './SelectDropdown.styled';
+import ArrowPng from '../../assets/icons8-expand-arrow-50 dark.png';
 // import ArrowPngLight from "../../assets/icons8-expand-arrow-50.png";
-import useClickOutside from "../../hooks/useClickOutside";
+import useClickOutside from '../../hooks/useClickOutside';
 
 export interface IOption {
   value: string | number;
