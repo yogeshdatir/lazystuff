@@ -1,8 +1,8 @@
 // Tutorial: https://youtu.be/bAJlYgeovlg
 // Repo: https://github.com/WebDevSimplified/react-select
 
-import styled from "@emotion/styled";
-import React, { KeyboardEvent, useState } from "react";
+import styled from '@emotion/styled';
+import React, { KeyboardEvent, useState } from 'react';
 
 export type ISelectOption = {
   label: string;
@@ -100,7 +100,7 @@ const OptionsBox = styled.ul<IOptionBox>`
   margin: 0;
   padding: 0;
   list-style: none;
-  display: ${({ show }) => (show ? "block" : "none")};
+  display: ${({ show }) => (show ? 'block' : 'none')};
   max-height: 15em;
   overflow-y: auto;
   border: 0.05em solid #777;
@@ -122,12 +122,12 @@ const Option = styled.li<IOption>`
   cursor: pointer;
   background-color: ${({ isSelected, isHighlightedIndex }) =>
     isSelected
-      ? "hsl(200, 100%, 70%)"
+      ? 'hsl(200, 100%, 70%)'
       : isHighlightedIndex
-      ? "hsl(200, 100%, 50%)"
-      : "transparent"};
+      ? 'hsl(200, 100%, 50%)'
+      : 'transparent'};
   color: ${({ isSelected, isHighlightedIndex }) =>
-    !isSelected && isHighlightedIndex ? "white" : ""};
+    !isSelected && isHighlightedIndex ? 'white' : ''};
 `;
 
 const SelectedOptionBadge = styled.button`
@@ -148,7 +148,7 @@ const SelectedOptionBadge = styled.button`
   }
 
   :hover > .remove-btn,
-  :focus > .remove-btn {
+  > .remove-btn {
     color: hsl(0, 100%, 50%);
   }
 
@@ -204,29 +204,29 @@ const SingleMultiSelectWithBadges = ({
 
   const keyboardHandler = (event: KeyboardEvent<HTMLDivElement>) => {
     switch (event.code) {
-      case "Enter":
-      case "Space":
+      case 'Enter':
+      case 'Space':
         if (multiple) setIsOpen(true);
         else setIsOpen((prev: boolean) => !prev);
         if (isOpen) selectOption(options[highlightedIndex]);
         break;
 
-      case "ArrowUp":
-      case "ArrowDown": {
+      case 'ArrowUp':
+      case 'ArrowDown': {
         if (!isOpen) {
           setIsOpen(true);
           break;
         }
 
         const newHighlightedIndex =
-          highlightedIndex + (event.code === "ArrowDown" ? 1 : -1);
+          highlightedIndex + (event.code === 'ArrowDown' ? 1 : -1);
         if (newHighlightedIndex >= 0 && newHighlightedIndex < options.length) {
           setHighlightedIndex(newHighlightedIndex);
         }
         break;
       }
 
-      case "Escape":
+      case 'Escape':
         setIsOpen(false);
         break;
     }
