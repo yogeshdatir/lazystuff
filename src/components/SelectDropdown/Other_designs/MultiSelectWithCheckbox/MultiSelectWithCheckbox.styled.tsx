@@ -118,7 +118,7 @@ export const Option = styled.li<IOption>`
   padding: 0.25em 0.5em;
   cursor: pointer;
   background-color: ${({ isHighlightedIndex }) =>
-    isHighlightedIndex ? 'hsl(200; 100%; 50%)' : 'transparent'};
+    isHighlightedIndex ? 'hsl(200, 100%, 50%)' : 'transparent'};
   color: ${({ isHighlightedIndex }) => (isHighlightedIndex ? 'white' : '')};
   display: flex;
   align-items: center;
