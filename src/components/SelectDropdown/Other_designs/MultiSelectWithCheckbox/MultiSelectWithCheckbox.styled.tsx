@@ -19,8 +19,8 @@ export const SelectBox = styled.div`
   box-sizing: border-box;
   border-radius: 0.25em;
 
-  :focus ;
-  :focus-visible ;
+  :focus,
+  :focus-visible,
   :focus-within {
     outline: 1.5px solid hsl(200, 100%, 50%);
   }
@@ -52,7 +52,7 @@ export const ClearButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  :focus ;
+  :focus,
   :hover {
     color: #222;
     scale: 1.1;
@@ -79,7 +79,7 @@ export const CaretWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  :focus ;
+  :focus,
   :hover {
     div {
       border-top-color: #222;
@@ -111,7 +111,6 @@ export const OptionsBox = styled.ul<IOptionBox>`
 
 interface IOption {
   isHighlightedIndex?: boolean;
-  isSelected: boolean;
 }
 
 export const Option = styled.li<IOption>`
@@ -136,13 +135,13 @@ export const SelectedOptionBadge = styled.button`
   background: none;
   outline: none;
 
-  :hover;
+  :hover,
   :focus {
     background-color: hsl(0, 100%, 90%);
     border-color: hsl(0, 100%, 50%);
   }
 
-  :hover > .remove-btn;
+  :hover > .remove-btn,
   :focus > .remove-btn {
     color: hsl(0, 100%, 50%);
   }

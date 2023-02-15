@@ -197,7 +197,6 @@ const MultiSelectWithCheckbox = ({
             onMouseEnter={() => {
               setHoveredIndex(index);
             }}
-            isSelected={isOptionSelected(option)}
             isHighlightedIndex={hoveredIndex === index}
           >
             <CustomCheckbox role="checkbox" aria-checked={false}>
@@ -208,9 +207,7 @@ const MultiSelectWithCheckbox = ({
         );
       })
     ) : (
-      <Option isSelected={false} style={{ cursor: 'auto' }}>
-        No options available
-      </Option>
+      <Option style={{ cursor: 'auto' }}>No options available</Option>
     );
   };
 
