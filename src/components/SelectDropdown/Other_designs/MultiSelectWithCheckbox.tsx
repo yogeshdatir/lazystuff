@@ -55,7 +55,8 @@ const SelectBox = styled.div`
   border-radius: 0.25em;
 
   :focus,
-  :focus-visible {
+  :focus-visible,
+  :focus-within {
     outline: 1.5px solid hsl(200, 100%, 50%);
   }
 `;
@@ -205,7 +206,6 @@ const CustomPlaceholderText = styled.span`
   color: gray;
 `;
 
-// TODO: Add keyboard accessibility to search input
 // TODO: Add select all feature
 // TODO: Add options groups
 // TODO: Add select all for option groups
@@ -230,6 +230,7 @@ const MultiSelectWithCheckbox = ({
     if (isOpen) setIsOpen(!isOpen);
   });
 
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const [filteredOptions, setFilteredOptions] = useState<ISelectOption[]>([]);
@@ -249,7 +250,7 @@ const MultiSelectWithCheckbox = ({
         option.label
           .toString()
           .toLowerCase()
-          .includes(searchTermArg.toString().toLowerCase())
+          .includes(searchTermArg.toString().trim().toLowerCase())
       )
         return option;
       return null;
@@ -284,10 +285,10 @@ const MultiSelectWithCheckbox = ({
   };
 
   const keyboardHandler = (event: KeyboardEvent<HTMLDivElement>) => {
+    event.stopPropagation();
     switch (event.code) {
       case 'Enter':
       case 'NumpadEnter':
-      case 'Space':
         if (multiple) setIsOpen(true);
         else setIsOpen((prev: boolean) => !prev);
         if (isOpen) selectOption(options[hoveredIndex]);
@@ -312,44 +313,73 @@ const MultiSelectWithCheckbox = ({
       case 'Tab':
         setIsOpen(false);
         break;
+
+      default: {
+        searchInputRef.current?.focus();
+      }
+    }
+  };
+
+  const searchKeyboardHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+    switch (event.code) {
+      case 'ArrowUp':
+      case 'ArrowDown':
+      case 'Escape':
+      case 'Tab': {
+        keyboardHandler(event);
+        break;
+      }
+      case 'Enter':
+      case 'NumpadEnter': {
+        if (multiple) setIsOpen(true);
+        else setIsOpen((prev: boolean) => !prev);
+        if (isOpen) selectOption(filteredOptions[hoveredIndex]);
+        break;
+      }
     }
   };
 
   const renderOptions = (optionList: ISelectOption[]) => {
-    return optionList.map((option: ISelectOption, index: number) => {
-      return (
-        <Option
-          key={option.value}
-          value={option.value}
-          onMouseDown={() => {
-            selectOption(option);
-            if (!multiple) setIsOpen(false);
-          }}
-          onMouseEnter={() => {
-            setHoveredIndex(index);
-          }}
-          isSelected={isOptionSelected(option)}
-          isHighlightedIndex={hoveredIndex === index}
-        >
-          <div
-            role="checkbox"
-            aria-checked={false}
-            style={{
-              width: '1rem',
-              height: '1rem',
-              border: '1px solid black',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              overflow: 'hidden',
+    return optionList.length ? (
+      optionList.map((option: ISelectOption, index: number) => {
+        return (
+          <Option
+            key={option.value}
+            value={option.value}
+            onMouseDown={() => {
+              selectOption(option);
+              if (!multiple) setIsOpen(false);
             }}
+            onMouseEnter={() => {
+              setHoveredIndex(index);
+            }}
+            isSelected={isOptionSelected(option)}
+            isHighlightedIndex={hoveredIndex === index}
           >
-            {isOptionSelected(option) && <CheckedIcon />}
-          </div>
-          {option.label}
-        </Option>
-      );
-    });
+            <div
+              role="checkbox"
+              aria-checked={false}
+              style={{
+                width: '1rem',
+                height: '1rem',
+                border: '1px solid black',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
+              }}
+            >
+              {isOptionSelected(option) && <CheckedIcon />}
+            </div>
+            {option.label}
+          </Option>
+        );
+      })
+    ) : (
+      <Option isSelected={false} style={{ cursor: 'auto' }}>
+        No options available
+      </Option>
+    );
   };
 
   // * Note: closing dropdown using onBlur is a spoiler specially for multiselect.
@@ -395,18 +425,21 @@ const MultiSelectWithCheckbox = ({
       <OptionsBox show={isOpen}>
         <SearchWrapper>
           <SearchInput
+            ref={searchInputRef}
             tabIndex={0}
             name="search"
             type="search"
             value={searchTerm}
             placeholder="Search..."
             onChange={(e) => {
-              setSearchTerm(e.target.value);
-              filterOptions(e.target.value);
+              const inputValue = e.target.value;
+              setSearchTerm(inputValue);
+              filterOptions(inputValue);
             }}
+            onKeyDown={searchKeyboardHandler}
           />
         </SearchWrapper>
-        {renderOptions(!!filteredOptions.length ? filteredOptions : options)}
+        {renderOptions(!!searchTerm.trim() ? filteredOptions : options)}
       </OptionsBox>
     </Container>
   );
