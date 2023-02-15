@@ -22,7 +22,7 @@ export const SelectBox = styled.div`
   :focus ;
   :focus-visible ;
   :focus-within {
-    outline: 1.5px solid hsl(200; 100%; 50%);
+    outline: 1.5px solid hsl(200, 100%, 50%);
   }
 `;
 
@@ -138,13 +138,13 @@ export const SelectedOptionBadge = styled.button`
 
   :hover;
   :focus {
-    background-color: hsl(0; 100%; 90%);
-    border-color: hsl(0; 100%; 50%);
+    background-color: hsl(0, 100%, 90%);
+    border-color: hsl(0, 100%, 50%);
   }
 
   :hover > .remove-btn;
   :focus > .remove-btn {
-    color: hsl(0; 100%; 50%);
+    color: hsl(0, 100%, 50%);
   }
 
   .remove-btn {
@@ -173,7 +173,7 @@ export const SearchInput = styled.input`
   border: 0.05em solid #777;
 
   :focus-visible {
-    outline: 1.5px solid hsl(200; 100%; 50%);
+    outline: 1.5px solid hsl(200, 100%, 50%);
   }
 `;
 
