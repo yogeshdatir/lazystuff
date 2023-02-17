@@ -39,13 +39,6 @@ type SingleSelectProps = {
   onChange: (value: ISelectOption | undefined) => void;
 };
 
-// interface IProps {
-//   multiple?: boolean;
-//   value?: ISelectOption | ISelectOption[];
-//   onChange: (value: ISelectOption | ISelectOption[] | undefined) => void;
-//   options: ISelectOption[];
-// }
-
 type IProps = {
   options: ISelectOption[];
   placeholder?: string | number;
@@ -67,7 +60,7 @@ const MultiSelectWithCheckbox = ({
 }: IProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [hoveredIndex, setHoveredIndex] = useState<number>(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | 'selectAll'>(0);
 
   const wrapperRef = useRef(null);
   useClickOutside(wrapperRef, () => {
@@ -78,6 +71,12 @@ const MultiSelectWithCheckbox = ({
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const [filteredOptions, setFilteredOptions] = useState<ISelectOption[]>([]);
+
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+
+  const isValidSearchTerm = () => {
+    return !!searchTerm.trim();
+  };
 
   const clearOptions = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -113,18 +112,28 @@ const MultiSelectWithCheckbox = ({
 
   const selectOption = (option: ISelectOption) => {
     if (multiple) {
+      let updatedSelectedValue = [...value];
       if (!isOptionSelected(option)) {
-        onChange([...value, option]);
+        updatedSelectedValue = [...value, option];
       } else {
-        onChange(
-          value.filter(
-            (element: ISelectOption) =>
-              JSON.stringify(element) !== JSON.stringify(option)
-          )
+        updatedSelectedValue = value.filter(
+          (element: ISelectOption) =>
+            JSON.stringify(element) !== JSON.stringify(option)
         );
       }
+      onChange(updatedSelectedValue);
     } else {
       if (!isOptionSelected(option)) onChange(option);
+    }
+  };
+
+  const selectAllOptions = (
+    optionsForSelectAll: ISelectOption[],
+    syncedSelectAll: boolean
+  ) => {
+    if (multiple) {
+      if (syncedSelectAll) onChange(optionsForSelectAll);
+      else onChange([]);
     }
   };
 
@@ -135,7 +144,10 @@ const MultiSelectWithCheckbox = ({
       case 'NumpadEnter':
         if (multiple) setIsOpen(true);
         else setIsOpen((prev: boolean) => !prev);
-        if (isOpen) selectOption(options[hoveredIndex]);
+        if (isOpen && typeof hoveredIndex === 'number')
+          isValidSearchTerm()
+            ? selectOption(filteredOptions[hoveredIndex])
+            : selectOption(options[hoveredIndex]);
         break;
 
       case 'ArrowUp':
@@ -145,10 +157,15 @@ const MultiSelectWithCheckbox = ({
           break;
         }
 
-        const newHighlightedIndex =
-          hoveredIndex + (event.code === 'ArrowDown' ? 1 : -1);
-        if (newHighlightedIndex >= 0 && newHighlightedIndex < options.length) {
-          setHoveredIndex(newHighlightedIndex);
+        if (typeof hoveredIndex === 'number') {
+          const newHighlightedIndex =
+            hoveredIndex + (event.code === 'ArrowDown' ? 1 : -1);
+          if (
+            newHighlightedIndex >= 0 &&
+            newHighlightedIndex < options.length
+          ) {
+            setHoveredIndex(newHighlightedIndex);
+          }
         }
         break;
       }
@@ -166,6 +183,8 @@ const MultiSelectWithCheckbox = ({
 
   const searchKeyboardHandler = (event: KeyboardEvent<HTMLInputElement>) => {
     switch (event.code) {
+      case 'Enter':
+      case 'NumpadEnter':
       case 'ArrowUp':
       case 'ArrowDown':
       case 'Escape':
@@ -173,39 +192,54 @@ const MultiSelectWithCheckbox = ({
         keyboardHandler(event);
         break;
       }
-      case 'Enter':
-      case 'NumpadEnter': {
-        if (multiple) setIsOpen(true);
-        else setIsOpen((prev: boolean) => !prev);
-        if (isOpen) selectOption(filteredOptions[hoveredIndex]);
-        break;
-      }
     }
   };
 
   const renderOptions = (optionList: ISelectOption[]) => {
     return optionList.length ? (
-      optionList.map((option: ISelectOption, index: number) => {
-        return (
+      <>
+        {multiple && !isValidSearchTerm() && (
           <Option
-            key={option.value}
-            value={option.value}
+            value={'selectAll'}
             onMouseDown={() => {
-              selectOption(option);
-              if (!multiple) setIsOpen(false);
+              selectAllOptions(optionList, !selectAll);
+              setSelectAll((prevSelectAll: boolean) => !prevSelectAll);
             }}
             onMouseEnter={() => {
-              setHoveredIndex(index);
+              setHoveredIndex('selectAll');
             }}
-            isHighlightedIndex={hoveredIndex === index}
+            isHighlightedIndex={hoveredIndex === 'selectAll'}
           >
             <CustomCheckbox role="checkbox" aria-checked={false}>
-              {isOptionSelected(option) && <CheckedIcon />}
+              {selectAll && value.length === optionList.length && (
+                <CheckedIcon />
+              )}
             </CustomCheckbox>
-            {option.label}
+            Select All
           </Option>
-        );
-      })
+        )}
+        {optionList.map((option: ISelectOption, index: number) => {
+          return (
+            <Option
+              key={option.value}
+              value={option.value}
+              onMouseDown={() => {
+                selectOption(option);
+                if (!multiple) setIsOpen(false);
+              }}
+              onMouseEnter={() => {
+                setHoveredIndex(index);
+              }}
+              isHighlightedIndex={hoveredIndex === index}
+            >
+              <CustomCheckbox role="checkbox" aria-checked={false}>
+                {isOptionSelected(option) && <CheckedIcon />}
+              </CustomCheckbox>
+              {option.label}
+            </Option>
+          );
+        })}
+      </>
     ) : (
       <Option style={{ cursor: 'auto' }}>No options available</Option>
     );
@@ -268,7 +302,7 @@ const MultiSelectWithCheckbox = ({
             onKeyDown={searchKeyboardHandler}
           />
         </SearchWrapper>
-        {renderOptions(!!searchTerm.trim() ? filteredOptions : options)}
+        {renderOptions(isValidSearchTerm() ? filteredOptions : options)}
       </OptionsBox>
     </Container>
   );
