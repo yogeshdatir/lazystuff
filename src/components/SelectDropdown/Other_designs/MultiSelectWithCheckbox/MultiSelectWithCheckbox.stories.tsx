@@ -1,22 +1,22 @@
-import { Meta } from "@storybook/react";
-import React, { useState } from "react";
+import { Meta } from '@storybook/react';
+import React, { useState } from 'react';
 import MultiSelectWithCheckbox, {
   ISelectOption,
-} from "./MultiSelectWithCheckbox";
+} from './MultiSelectWithCheckbox';
 
 const meta: Meta = {
-  title: "Dropdowns/MultiSelect Dropdown Design 3 - With Checkbox",
+  title: 'Dropdowns/MultiSelect Dropdown Design 3 - With Checkbox',
   component: MultiSelectWithCheckbox,
 };
 
 export default meta;
 
 const options: ISelectOption[] = [
-  { label: "Mumbai", value: 1 },
-  { label: "Delhi", value: 2 },
-  { label: "Pune", value: 3 },
-  { label: "Nagpur", value: 4 },
-  { label: "Amravati", value: 5 },
+  { label: 'Mumbai', value: 1 },
+  { label: 'Delhi', value: 2 },
+  { label: 'Pune', value: 3 },
+  { label: 'Nagpur', value: 4 },
+  { label: 'Amravati', value: 5 },
 ];
 
 const Template = () => {
