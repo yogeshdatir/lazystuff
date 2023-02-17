@@ -4,6 +4,7 @@
 import React, { KeyboardEvent, MouseEvent, useRef, useState } from 'react';
 import { ReactComponent as CheckedIcon } from '../../../../assets/icons8-done.svg';
 import useClickOutside from '../../../../hooks/useClickOutside';
+import { useEffect } from 'react';
 import {
   ActionsWrapper,
   Caret,
@@ -44,13 +45,14 @@ type IProps = {
   placeholder?: string | number;
 } & (SingleSelectProps | MultiSelectProps);
 
-// TODO: Add select all feature
 // TODO: Add options groups
 // TODO: Add select all for option groups
 // TODO: Add async await - lazy loading
 // TODO: Bug: Pressing enter on clearOption icon clears the selections but if user presses down arrow and selects option then it doesn't work and dropdown is closed
+// TODO: Integrate select all and search features
 
 const DEFAULT_PLACEHOLDER_COPY = `Select an option...`;
+const SELECT_ALL_INDEX = 'selectAll';
 const MultiSelectWithCheckbox = ({
   multiple,
   value,
@@ -137,6 +139,12 @@ const MultiSelectWithCheckbox = ({
     }
   };
 
+  useEffect(() => {
+    if (multiple) {
+      setSelectAll(value.length === options.length);
+    }
+  }, [value, options, multiple]);
+
   const keyboardHandler = (event: KeyboardEvent<HTMLDivElement>) => {
     event.stopPropagation();
     switch (event.code) {
@@ -148,6 +156,10 @@ const MultiSelectWithCheckbox = ({
           isValidSearchTerm()
             ? selectOption(filteredOptions[hoveredIndex])
             : selectOption(options[hoveredIndex]);
+        else if (isOpen && hoveredIndex === SELECT_ALL_INDEX) {
+          selectAllOptions(options, !selectAll);
+          setSelectAll((prevSelectAll: boolean) => !prevSelectAll);
+        }
         break;
 
       case 'ArrowUp':
@@ -165,7 +177,14 @@ const MultiSelectWithCheckbox = ({
             newHighlightedIndex < options.length
           ) {
             setHoveredIndex(newHighlightedIndex);
+          } else if (hoveredIndex === 0) {
+            setHoveredIndex(SELECT_ALL_INDEX);
           }
+        } else if (
+          hoveredIndex === SELECT_ALL_INDEX &&
+          event.code === 'ArrowDown'
+        ) {
+          setHoveredIndex(0);
         }
         break;
       }
@@ -200,20 +219,18 @@ const MultiSelectWithCheckbox = ({
       <>
         {multiple && !isValidSearchTerm() && (
           <Option
-            value={'selectAll'}
+            value={SELECT_ALL_INDEX}
             onMouseDown={() => {
               selectAllOptions(optionList, !selectAll);
               setSelectAll((prevSelectAll: boolean) => !prevSelectAll);
             }}
             onMouseEnter={() => {
-              setHoveredIndex('selectAll');
+              setHoveredIndex(SELECT_ALL_INDEX);
             }}
-            isHighlightedIndex={hoveredIndex === 'selectAll'}
+            isHighlightedIndex={hoveredIndex === SELECT_ALL_INDEX}
           >
             <CustomCheckbox role="checkbox" aria-checked={false}>
-              {selectAll && value.length === optionList.length && (
-                <CheckedIcon />
-              )}
+              {selectAll && <CheckedIcon />}
             </CustomCheckbox>
             Select All
           </Option>
@@ -271,10 +288,10 @@ const MultiSelectWithCheckbox = ({
                 </SelectedOptionBadge>
               ))
             ) : (
-              <CustomPlaceholder />
+              <CustomPlaceholder placeholder={placeholder} />
             )
           ) : (
-            value?.label || <CustomPlaceholder />
+            value?.label || <CustomPlaceholder placeholder={placeholder} />
           )}
         </SelectedValueText>
         <ActionsWrapper>
