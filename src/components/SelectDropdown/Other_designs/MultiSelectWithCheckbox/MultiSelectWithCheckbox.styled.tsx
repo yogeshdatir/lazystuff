@@ -20,8 +20,7 @@ export const SelectBox = styled.div`
   border-radius: 0.25em;
 
   :focus,
-  :focus-visible,
-  :focus-within {
+  :focus-visible {
     outline: 1.5px solid hsl(200, 100%, 50%);
   }
 `;

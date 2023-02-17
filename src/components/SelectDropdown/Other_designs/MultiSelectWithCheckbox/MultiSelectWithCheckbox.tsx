@@ -147,6 +147,7 @@ const MultiSelectWithCheckbox = ({
 
   const keyboardHandler = (event: KeyboardEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    if (event.currentTarget !== event.target) return;
     switch (event.code) {
       case 'Enter':
       case 'NumpadEnter':
@@ -280,6 +281,7 @@ const MultiSelectWithCheckbox = ({
                 <SelectedOptionBadge
                   key={selectedOption.value}
                   onClick={(e) => {
+                    e.stopPropagation();
                     selectOption(selectedOption);
                   }}
                 >
