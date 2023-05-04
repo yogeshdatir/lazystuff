@@ -6,7 +6,7 @@ const meta: Meta<typeof SimpleAccordion> = {
    * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
-  title: 'Simple Accordion',
+  title: 'Components/Simple Accordion',
   component: SimpleAccordion,
 };
 
