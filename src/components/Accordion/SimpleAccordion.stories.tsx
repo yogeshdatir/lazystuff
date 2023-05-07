@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import SimpleAccordion from './SimpleAccordion';
+import Accordion from '.';
 
 const meta: Meta<typeof SimpleAccordion> = {
   /* 👇 The title prop is optional.
@@ -20,4 +21,27 @@ type Story = StoryObj<typeof SimpleAccordion>;
  */
 export const Primary: Story = {
   render: () => <SimpleAccordion />,
+};
+
+export const AccordionStory: StoryObj<typeof Accordion> = {
+  render: () => (
+    <Accordion
+      title="What is the maximum file upload size?"
+      content="No more than 2GB. All files in your account must fit your allotted storage space."
+    />
+  ),
+  parameters: {
+    docs: {
+      canvas: { sourceState: 'shown' },
+      source: {
+        code: `
+              /* test */
+              <Accordion
+                title="What is the maximum file upload size?"
+                content="No more than 2GB. All files in your account must fit your allotted storage space."
+              />`,
+        format: 'dedent',
+      },
+    },
+  },
 };
