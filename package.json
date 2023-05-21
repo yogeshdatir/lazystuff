@@ -56,20 +56,20 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^7.0.8",
-    "@storybook/addon-essentials": "^7.0.8",
-    "@storybook/addon-interactions": "^7.0.8",
-    "@storybook/addon-links": "^7.0.8",
-    "@storybook/addon-mdx-gfm": "7.0.8",
-    "@storybook/node-logger": "^7.0.8",
-    "@storybook/preset-create-react-app": "^7.0.8",
-    "@storybook/react": "^7.0.8",
-    "@storybook/react-webpack5": "7.0.8",
+    "@storybook/addon-actions": "^7.0.11",
+    "@storybook/addon-essentials": "^7.0.11",
+    "@storybook/addon-interactions": "^7.0.11",
+    "@storybook/addon-links": "^7.0.11",
+    "@storybook/addon-mdx-gfm": "7.0.11",
+    "@storybook/node-logger": "^7.0.11",
+    "@storybook/preset-create-react-app": "^7.0.11",
+    "@storybook/react": "^7.0.11",
+    "@storybook/react-webpack5": "7.0.11",
     "@storybook/testing-library": "^0.1.0",
     "@types/react-virtualized": "^9.21.21",
     "babel-plugin-named-exports-order": "^0.0.2",
     "prop-types": "^15.8.1",
-    "storybook": "7.0.8",
+    "storybook": "7.0.11",
     "webpack": "^5.74.0"
   }
 }
