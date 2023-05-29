@@ -16,9 +16,10 @@ lazystuff uses Reactjs, Storybook.
 https://lazystuff-storybook.netlify.app/
 
 ## Possible Inspirations:
-1. https://storybook-icon-gallery.netlify.app/?path=/docs/usage--single-variant
-2. https://developers.arcgis.com/experience-builder/storybook/?path=/docs/components-jimu-ui-index-advancedselect--dynamic-data
-3. https://storybook.oriflame.com/?path=/docs/icons--overview
+1. https://youtube.com/playlist?list=PLKBvDYynKmlWa59k8pnw-EHac2_miPagh
+2. https://storybook-icon-gallery.netlify.app/?path=/docs/usage--single-variant
+4. https://developers.arcgis.com/experience-builder/storybook/?path=/docs/components-jimu-ui-index-advancedselect--dynamic-data
+5. https://storybook.oriflame.com/?path=/docs/icons--overview
 
 License
 MIT
