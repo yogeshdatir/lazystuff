@@ -60,6 +60,7 @@ export const OptionsBox = styled.div<any>`
   padding: ${(props: any) => (props.isActive ? "10px 0" : 0)};
 
   // * Added these properties for height animation and to hide scroll till the animation completes
+  // * Reference: https://css-tricks.com/hide-scrollbars-during-an-animation/
   overflow: ${(props: any) => (props.isActive ? "auto" : "hidden")};
   transition: all 0.5s ease-out;
   max-height: ${(props: any) => (props.isActive ? "300%" : 0)};
