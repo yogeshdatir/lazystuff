@@ -1,3 +1,4 @@
+import { css, keyframes } from '@emotion/react';
 import styled from "@emotion/styled";
 
 export const Dropdown = styled.div`
@@ -16,6 +17,8 @@ export const Dropdown = styled.div`
   @media (max-width: 480px) {
     margin-top: 20px;
   }
+
+  * { box-sizing: border-box}
 `;
 
 export const SelectBox = styled.div<any>`
@@ -40,18 +43,27 @@ export const ArrowIcon = styled.img<any>`
     props.isActive ? "rotate(180deg)" : "rotate(0)"};
 `;
 
+// * Scroll hide animation imitating delay in display of scroll till height animation completes
+const hideScroll  = keyframes `
+  from, to { overflow: hidden; }
+`
+
 export const OptionsBox = styled.div<any>`
   box-shadow: 0px 2px 9px rgba(0, 0, 0, 0.0532439);
   border-radius: 5px;
 
   position: absolute;
   top: 107%;
+  z-index: 9999;
+  background-color: #fff;
   width: 100%;
-  overflow: auto;
-
-  /* TODO: add animation for height and hide scroll till animation completes. */
-  max-height: ${(props: any) => (props.isActive ? "164px" : 0)};
   padding: ${(props: any) => (props.isActive ? "10px 0" : 0)};
+
+  // * Added these properties for height animation and to hide scroll till the animation completes
+  overflow: ${(props: any) => (props.isActive ? "auto" : "hidden")};
+  transition: all 0.5s ease-out;
+  max-height: ${(props: any) => (props.isActive ? "300%" : 0)};
+  animation: ${(props: any) => (props.isActive ? css`${hideScroll} 0.5s backwards` : "")};
 `;
 
 export const OptionItem = styled.option<any>`
