@@ -14,7 +14,7 @@ const Template = () => {
   const [selectedRegion, setSelectedRegion] = useState("Filter by Region");
 
   return (
-    <SelectDropdown
+    <><SelectDropdown
       selectedRegion={selectedRegion}
       setSelectedRegion={setSelectedRegion}
       options={[
@@ -25,6 +25,27 @@ const Template = () => {
         { value: "Oceania", displayValue: "Oceania" },
       ]}
     />
+    <SelectDropdown
+      selectedRegion={selectedRegion}
+      setSelectedRegion={setSelectedRegion}
+      options={[
+        { value: "Africa", displayValue: "Africa" },
+        { value: "America", displayValue: "America" },
+        { value: "Asia", displayValue: "Asia" },
+        { value: "Europe", displayValue: "Europe" },
+        { value: "Oceania", displayValue: "Oceania" },
+        { value: "Africa1", displayValue: "Africa1" },
+        { value: "America1", displayValue: "America1" },
+        { value: "Asia1", displayValue: "Asia1" },
+        { value: "Europe1", displayValue: "Europe1" },
+        { value: "Oceania1", displayValue: "Oceania1" },
+        { value: "Africa2", displayValue: "Africa2" },
+        { value: "America2", displayValue: "America2" },
+        { value: "Asia2", displayValue: "Asia2" },
+        { value: "Europe2", displayValue: "Europe2" },
+        { value: "Oceania2", displayValue: "Oceania2" },
+      ]}
+    /></>
   );
 };
 
