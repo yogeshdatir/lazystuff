@@ -5,284 +5,318 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
 # React Webpack Setup
 
-1. **Create project directory e.g. `react-webpack-setup`.**
+- ### Create project directory e.g. `react-webpack-setup`.
 
-2. **Inside project directory run**
+- ### Inside project directory run
 
-```cmd
-npm init -y
-```
+  ```cmd
+  npm init -y
+  ```
 
-3. **Update `package.json` as needed.**
+  <br />
 
-4. **Create folder structure.**
+- ### Update `package.json` as needed.
 
-<img src={FolderStructure} alt="folder structure" />
+- ### Create folder structure.<br />
 
-5. **Create `index.html` in root directory.**
+  <img src={FolderStructure} alt="folder structure" />
+  <br />
 
-```html
-<!-- **index.html -->**
+- ### Create `index.html` in root directory.
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React Webpack Setup</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
-```
+  ```html
+  <!-- ### index.html -->
 
-6. **Install react packages.**
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>React Webpack Setup</title>
+    </head>
+    <body>
+      <div id="root"></div>
+      <script type="module" src="/src/main.jsx"></script>
+    </body>
+  </html>
+  ```
 
-```cmd
-yarn add react react-dom
-```
+  <br />
 
-7. **Create `App.jsx` in `src` directory.**
+- ### Install react packages.
 
-```js
-// src/App.jsx
+  ```cmd
+  yarn add react react-dom
+  ```
 
-import React from 'react';
+  <br />
 
-const App = () => {
-  return <div>App</div>;
-};
+- ### Create `App.jsx` in `src` directory.
 
-export default App;
-```
+  ```js
+  // src/App.jsx
 
-8. **Create `main.jsx` in `src` directory.**
+  import React from 'react';
 
-```js
-// src/main.jsx
+  const App = () => {
+    return <div>App</div>;
+  };
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.jsx';
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-```
+  export default App;
+  ```
 
-9. **Add babel.**
+  <br />
 
-```cmd
-  yarn add -D @babel/core @babel/preset-env @babel/preset-react babel-loader
-```
+- ### Create `main.jsx` in `src` directory.
 
-10. **Add `.babelrc` in root directory.**
+  ```js
+  // src/main.jsx
 
-```json
-// .babelrc
+  import React from 'react';
+  import ReactDOM from 'react-dom/client';
+  import App from './App.jsx';
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+  ```
 
-{
-  "presets": ["@babel/preset-env", "@babel/preset-react"]
-}
-```
+  <br />
 
-11. **Add webpack.**
+- ### Add babel.
 
-```cmd
-  yarn add -D webpack webpack-cli webpack-dev-server html-webpack-plugin
-```
+  ```cmd
+    yarn add -D @babel/core @babel/preset-env @babel/preset-react babel-loader
+  ```
 
-12. **Add `webpack.config.js` in root directory.**
+  <br />
 
-```js
-// webpack.config.js
+- ### Add `.babelrc` in root directory.
 
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+  ```json
+  // .babelrc
 
-module.exports = {
-  mode: 'development',
-  entry: path.resolve(__dirname, './src/main.jsx'),
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
-  },
-  target: 'web',
-  devServer: {
-    port: '3000',
-    static: ['./dist'],
-    open: true,
-    hot: true,
-    liveReload: true,
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.json'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-      },
+  {
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
+  }
+  ```
+
+  <br />
+
+- ### Add webpack.
+
+  ```cmd
+    yarn add -D webpack webpack-cli webpack-dev-server html-webpack-plugin
+  ```
+
+  <br />
+
+- ### Add `webpack.config.js` in root directory.
+
+  ```js
+  // webpack.config.js
+
+  const path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+  module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, './src/main.jsx'),
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'main.js',
+    },
+    target: 'web',
+    devServer: {
+      port: '3000',
+      static: ['./dist'],
+      open: true,
+      hot: true,
+      liveReload: true,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, '/index.html'),
+      }),
     ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/index.html'),
-    }),
-  ],
-};
-```
+  };
+  ```
 
-13. **Add scripts in `package.json`.**
+  <br />
 
-```json
-// package.json
+- ### Add scripts in `package.json`.
 
-"scripts": {
-  "dev": "webpack serve --mode development --open --hot",
-  "build": "webpack --mode production"
-}
-```
+  ```json
+  // package.json
 
-14. **Add css loaders to process css files with webpack.**
+  "scripts": {
+    "dev": "webpack serve --mode development --open --hot",
+    "build": "webpack --mode production"
+  }
+  ```
 
-```ps
-  yarn add -D css-loader style-loader
-```
+  <br />
 
-Update webpack configuration. Add rule object, to use css loaders, in `module.rules` array.
+- ### Add css loaders to process css files with webpack.
 
-```js
-// webpack.config.js
+  ```ps
+    yarn add -D css-loader style-loader
+  ```
 
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+  Update webpack configuration. Add rule object, to use css loaders, in `module.rules` array.
 
-module.exports = {
-  mode: 'development',
-  entry: path.resolve(__dirname, './src/main.jsx'),
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
-  },
-  target: 'web',
-  devServer: {
-    port: '3000',
-    static: ['./dist'],
-    open: true,
-    hot: true,
-    liveReload: true,
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.json'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-      },
-      // Change Start
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      // Change End
+  ```js
+  // webpack.config.js
+
+  const path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+  module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, './src/main.jsx'),
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'main.js',
+    },
+    target: 'web',
+    devServer: {
+      port: '3000',
+      static: ['./dist'],
+      open: true,
+      hot: true,
+      liveReload: true,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+        // Change Start
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        // Change End
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, '/index.html'),
+      }),
     ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/index.html'),
-    }),
-  ],
-};
-```
+  };
+  ```
 
-15. **Add `styles.css` in `src` directory.**
-    Import it in `main.jsx`.
+  <br />
 
-```jsx
-import './styles.css';
-```
+- ### Add `styles.css` in `src` directory.
 
-Now, the styles should work as expected.
+  Import it in `main.jsx`.
 
-16. **Add image, svg loaders to process images and svgs. **
-    With webpack 5, no packages are needed to be installed to process images and svgs.  
-    Update webpack configuration. Add rule object, to use image,svg loaders, in `module.rules` array.
+  ```jsx
+  import './styles.css';
+  ```
 
-```js
-// webpack.config.js
+  Now, the styles should work as expected.
 
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+  <br />
 
-module.exports = {
-  mode: 'development',
-  entry: path.resolve(__dirname, './src/main.jsx'),
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
-  },
-  target: 'web',
-  devServer: {
-    port: '3000',
-    static: ['./dist'],
-    open: true,
-    hot: true,
-    liveReload: true,
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.json'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      // Change Start
-      {
-        test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
-        type: 'asset/resource',
-      },
-      {
-        test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
-        type: 'asset/inline',
-      },
-      // Change End
+- ### Add image, svg loaders to process images and svgs.
+
+  With webpack 5, no packages are needed to be installed to process images and svgs.  
+  Update webpack configuration. Add rule object, to use image,svg loaders, in `module.rules`
+  array.
+
+  ```js
+  // webpack.config.js
+
+  const path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+  module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, './src/main.jsx'),
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'main.js',
+    },
+    target: 'web',
+    devServer: {
+      port: '3000',
+      static: ['./dist'],
+      open: true,
+      hot: true,
+      liveReload: true,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        // Change Start
+        {
+          test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+          type: 'asset/resource',
+        },
+        {
+          test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+          type: 'asset/inline',
+        },
+        // Change End
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, '/index.html'),
+      }),
     ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, '/index.html'),
-    }),
-  ],
-};
-```
+  };
+  ```
 
-17. **Initialize the project root directory for git.**
+  {' '}
 
-```cmd
-  git init
-```
+  <br />
 
-18. **Update/Add `.gitignore` in root directory.**
+- ### Initialize the project root directory for git.
 
-```git
-{/* .gitignore */}
+  ```cmd
+    git init
+  ```
 
-node_modules
-dist
-```
+  <br />
+
+- ### Update/Add `.gitignore` in root directory.
+
+  ```git
+  {/* .gitignore */}
+
+  node_modules
+  dist
+  ```
