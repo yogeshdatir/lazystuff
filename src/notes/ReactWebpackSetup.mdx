@@ -5,9 +5,9 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
 # React Webpack Setup
 
-- Create project directory e.g. `react-webpack-setup`.
+- ### Create project directory e.g. `react-webpack-setup`.
 
-- Inside project directory run
+- ### Inside project directory run
 
   ```cmd
   npm init -y
@@ -15,17 +15,17 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Update `package.json` as needed.
+- ### Update `package.json` as needed.
 
-- Create folder structure.<br />
+- ### Create folder structure.<br />
 
   <img src={FolderStructure} alt="folder structure" />
   <br />
 
-- Create `index.html` in root directory.
+- ### Create `index.html` in root directory.
 
   ```html
-  <!-- index.html -->
+  <!-- ### index.html -->
 
   <!DOCTYPE html>
   <html lang="en">
@@ -43,7 +43,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Install react packages.
+- ### Install react packages.
 
   ```cmd
   yarn add react react-dom
@@ -51,7 +51,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Create `App.jsx` in `src` directory.
+- ### Create `App.jsx` in `src` directory.
 
   ```js
   // src/App.jsx
@@ -67,7 +67,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Create `main.jsx` in `src` directory.
+- ### Create `main.jsx` in `src` directory.
 
   ```js
   // src/main.jsx
@@ -84,7 +84,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add babel.
+- ### Add babel.
 
   ```cmd
     yarn add -D @babel/core @babel/preset-env @babel/preset-react babel-loader
@@ -92,7 +92,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add `.babelrc` in root directory.
+- ### Add `.babelrc` in root directory.
 
   ```json
   // .babelrc
@@ -104,7 +104,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add webpack.
+- ### Add webpack.
 
   ```cmd
     yarn add -D webpack webpack-cli webpack-dev-server html-webpack-plugin
@@ -112,7 +112,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add `webpack.config.js` in root directory.
+- ### Add `webpack.config.js` in root directory.
 
   ```js
   // webpack.config.js
@@ -157,7 +157,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add scripts in `package.json`.
+- ### Add scripts in `package.json`.
 
   ```json
   // package.json
@@ -170,7 +170,7 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add css loaders to process css files with webpack.
+- ### Add css loaders to process css files with webpack.
 
   ```ps
     yarn add -D css-loader style-loader
@@ -227,7 +227,8 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add `styles.css` in `src` directory.
+- ### Add `styles.css` in `src` directory.
+
   Import it in `main.jsx`.
 
   ```jsx
@@ -238,10 +239,15 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Add image, svg loaders to process images and svgs. With webpack 5, no packages are needed to be installed to process images and svgs.
-  Update webpack configuration. Add rule object, to use image,svg loaders, in `module.rules` array.
+- ### Add image, svg loaders to process images and svgs.
+
+  With webpack 5, no packages are needed to be installed to process images and svgs.  
+  Update webpack configuration. Add rule object, to use image,svg loaders, in `module.rules`
+  array.
 
   ```js
+  // webpack.config.js
+
   const path = require('path');
   const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -294,9 +300,11 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
   };
   ```
 
+  {' '}
+
   <br />
 
-- Initialize the project root directory for git.
+- ### Initialize the project root directory for git.
 
   ```cmd
     git init
@@ -304,8 +312,11 @@ import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png
 
   <br />
 
-- Update/Add `.gitignore` in root directory.
+- ### Update/Add `.gitignore` in root directory.
+
   ```git
+  {/* .gitignore */}
+
   node_modules
   dist
   ```
