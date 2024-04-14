@@ -1,0 +1,311 @@
+import { Meta } from '@storybook/blocks';
+import FolderStructure from './assets/react-webpack-setup 1 folder-structure.png';
+
+<Meta title="Notes/React Webpack Setup" />
+
+# React Webpack Setup
+
+- Create project directory e.g. `react-webpack-setup`.
+
+- Inside project directory run
+
+  ```cmd
+  npm init -y
+  ```
+
+  <br />
+
+- Update `package.json` as needed.
+
+- Create folder structure.<br />
+
+  <img src={FolderStructure} alt="folder structure" />
+  <br />
+
+- Create `index.html` in root directory.
+
+  ```html
+  <!-- index.html -->
+
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>React Webpack Setup</title>
+    </head>
+    <body>
+      <div id="root"></div>
+      <script type="module" src="/src/main.jsx"></script>
+    </body>
+  </html>
+  ```
+
+  <br />
+
+- Install react packages.
+
+  ```cmd
+  yarn add react react-dom
+  ```
+
+  <br />
+
+- Create `App.jsx` in `src` directory.
+
+  ```js
+  // src/App.jsx
+
+  import React from 'react';
+
+  const App = () => {
+    return <div>App</div>;
+  };
+
+  export default App;
+  ```
+
+  <br />
+
+- Create `main.jsx` in `src` directory.
+
+  ```js
+  // src/main.jsx
+
+  import React from 'react';
+  import ReactDOM from 'react-dom/client';
+  import App from './App.jsx';
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+  ```
+
+  <br />
+
+- Add babel.
+
+  ```cmd
+    yarn add -D @babel/core @babel/preset-env @babel/preset-react babel-loader
+  ```
+
+  <br />
+
+- Add `.babelrc` in root directory.
+
+  ```json
+  // .babelrc
+
+  {
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
+  }
+  ```
+
+  <br />
+
+- Add webpack.
+
+  ```cmd
+    yarn add -D webpack webpack-cli webpack-dev-server html-webpack-plugin
+  ```
+
+  <br />
+
+- Add `webpack.config.js` in root directory.
+
+  ```js
+  // webpack.config.js
+
+  const path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+  module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, './src/main.jsx'),
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'main.js',
+    },
+    target: 'web',
+    devServer: {
+      port: '3000',
+      static: ['./dist'],
+      open: true,
+      hot: true,
+      liveReload: true,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, '/index.html'),
+      }),
+    ],
+  };
+  ```
+
+  <br />
+
+- Add scripts in `package.json`.
+
+  ```json
+  // package.json
+
+  "scripts": {
+    "dev": "webpack serve --mode development --open --hot",
+    "build": "webpack --mode production"
+  }
+  ```
+
+  <br />
+
+- Add css loaders to process css files with webpack.
+
+  ```ps
+    yarn add -D css-loader style-loader
+  ```
+
+  Update webpack configuration. Add rule object, to use css loaders, in `module.rules` array.
+
+  ```js
+  // webpack.config.js
+
+  const path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+  module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, './src/main.jsx'),
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'main.js',
+    },
+    target: 'web',
+    devServer: {
+      port: '3000',
+      static: ['./dist'],
+      open: true,
+      hot: true,
+      liveReload: true,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+        // Change Start
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        // Change End
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, '/index.html'),
+      }),
+    ],
+  };
+  ```
+
+  <br />
+
+- Add `styles.css` in `src` directory.
+  Import it in `main.jsx`.
+
+  ```jsx
+  import './styles.css';
+  ```
+
+  Now, the styles should work as expected.
+
+  <br />
+
+- Add image, svg loaders to process images and svgs. With webpack 5, no packages are needed to be installed to process images and svgs.
+  Update webpack configuration. Add rule object, to use image,svg loaders, in `module.rules` array.
+
+  ```js
+  const path = require('path');
+  const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+  module.exports = {
+    mode: 'development',
+    entry: path.resolve(__dirname, './src/main.jsx'),
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'main.js',
+    },
+    target: 'web',
+    devServer: {
+      port: '3000',
+      static: ['./dist'],
+      open: true,
+      hot: true,
+      liveReload: true,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        // Change Start
+        {
+          test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+          type: 'asset/resource',
+        },
+        {
+          test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+          type: 'asset/inline',
+        },
+        // Change End
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, '/index.html'),
+      }),
+    ],
+  };
+  ```
+
+  <br />
+
+- Initialize the project root directory for git.
+
+  ```cmd
+    git init
+  ```
+
+  <br />
+
+- Update/Add `.gitignore` in root directory.
+  ```git
+  node_modules
+  dist
+  ```
