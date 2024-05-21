@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/blocks';
+import EventLoop from './assets/event-loop.gif';
+
+<Meta title="Notes/JavaScript Event Loop" />
+
+# JavaScript Event Loop
+
+## Synchronous vs. Asynchronous Programming
+
+In this synchronous code, the actions happen sequentially. Each line executes one after the other, in the order they appear in the code.
+
+Example: Imagine a chef working in a kitchen.
+
+```js
+console.log(“Start”);
+console.log(“Chopping vegetables…”);
+console.log(“Finished chopping vegetables.”);
+console.log(“Serve the dish.”);
+console.log(“End”);
+```
+
+will print
+
+```console
+Start
+Chopping vegetables…
+Finished chopping vegetables.
+Serve the dish.
+End
+```
+
+In this asynchronous code, tasks can overlap and occur independently. Multiple task executions can occur concurrently.
+
+Example:
+
+```js
+console.log(“Start”);
+setTimeout(() => {
+ console.log(“Timer done.”);
+}, 2000);
+console.log(“Continue with other tasks…”);
+console.log(“End”);
+```
+
+will print
+
+```console
+Start
+Continue with other tasks…
+End
+Timer done.
+```
+
+In this asynchronous code, we use `setTimeout` to simulate a time delay.  
+JavaScript's event loop enables this multitasking capability by efficiently handling asynchronous operations, ensuring that your web applications remain responsive and efficient, even when dealing with numerous tasks simultaneously.
+
+
+## Some Common Asynchronous APIs
+1. `fetch`
+2. `setTimeout`
+3. `setInterval`
+4. Promise
+
+## What is Event Loop?
+
+> The event loop concept is very simple. There's an endless loop, where the JavaScript engine waits for tasks, executes them and then sleeps, waiting for more tasks.
+
+The event loop is responsible to keep a JavaScript program responsive and efficient.
+
+## Why do we need event loop?
+
+JavaScript is a single-threaded programming language. It can handle single task execution at a time.
+
+## Event Loop Visual
+<img src={EventLoop} alt="Event Loop Visual" />
+
+## Task or Macrotask and Task or Macrotask Queue
+
+## Microtask, Microtask Queue and `queueMicrotask()`
+
+## Queue Priority
+
+## Event loop schedule
+
+## DOM Manipulation and rendering
+
+## Examples
+
+## References
+
+1. [The Event Loop Demystified - How JavaScript Handles Asynchronous Operations](https://medium.com/@Adekola_Olawale/the-event-loop-demystified-171eebf8c0d9) By Adekola Olawale on Medium
+2. [javascript.info - Event Loop](https://javascript.info/event-loop)
+3. [Difference between microtask and macrotask queue in the event loop](https://dev.to/jeetvora331/difference-between-microtask-and-macrotask-queue-in-the-event-loop-4i4i) By jeetvora331 on Dev.io
