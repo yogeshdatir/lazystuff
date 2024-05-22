@@ -1,5 +1,5 @@
-import { Meta } from "@storybook/blocks";
-import EventLoop from "./assets/event-loop.gif";
+import { Meta } from '@storybook/blocks';
+import EventLoop from './assets/event-loop.gif';
 
 <Meta title="Notes/JavaScript Event Loop" />
 
@@ -91,7 +91,7 @@ function greeting() {
   // [2] Some code here
 }
 function sayHi() {
-  return "Hi!";
+  return 'Hi!';
 }
 
 // Invoke the `greeting` function
@@ -127,6 +127,7 @@ All microtasks are completed before any other event handling or rendering or any
 If we'd like to execute a function asynchronously (after the current code), but before changes are rendered or new events handled, we can schedule it with queueMicrotask.
 
 So the event loop algorithm works in this sequence:
+
 1. Execute the first runnable task from the task queue.
 2. Execute all microtask in the microtask queue.
 3. Render changes if any.
@@ -137,14 +138,61 @@ So the event loop algorithm works in this sequence:
 ```js
 Promise.resolve().then(() => console.log(1));
 
-setTimeout(() => console.log(2), 0)
+setTimeout(() => console.log(2), 0);
 
 queueMicrotask(() => {
-  console.log(3)
-  queueMicrotask(() => console.log(4))
+  console.log(3);
+  queueMicrotask(() => console.log(4));
 });
 
 console.log(5);
+```
+
+```js
+(() => {
+  console.log('this is the start');
+
+  setTimeout(() => {
+    console.log('Callback 1: this is a msg from call back');
+  }); // has a default time value of 0
+
+  console.log('this is just a message');
+
+  setTimeout(() => {
+    console.log('Callback 2: this is a msg from call back');
+  }, 0);
+
+  console.log('this is the end');
+})();
+```
+
+<details>
+  <summary>Console output:</summary>
+  <code>
+    <ol>
+      <li>"this is the start"</li>
+      <li>"this is just a message"</li>
+      <li>"this is the end"</li>
+      <li>"Callback 1: this is a msg from call back"</li>
+      <li>"Callback 2: this is a msg from call back"</li>
+    </ol>
+  </code>
+</details>
+
+```js
+console.log(1);
+
+setTimeout(() => console.log(2));
+
+Promise.resolve().then(() => console.log(3));
+
+Promise.resolve().then(() => setTimeout(() => console.log(4)));
+
+Promise.resolve().then(() => console.log(5));
+
+setTimeout(() => console.log(6));
+
+console.log(7);
 ```
 
 ## References
