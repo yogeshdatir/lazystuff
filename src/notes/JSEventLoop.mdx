@@ -1,5 +1,6 @@
 import { Meta } from '@storybook/blocks';
 import EventLoop from './assets/event-loop.gif';
+import EventLoopPriority from './assets/event-loop priority.gif';
 
 <Meta title="Notes/JavaScript Event Loop" />
 
@@ -58,8 +59,10 @@ JavaScript's event loop enables this multitasking capability by efficiently hand
 
 1. `fetch`
 2. `setTimeout`
+   The browser handles the timer for setTimeout. Once the timer expires, the callback function is pushed into the respective Queue.
 3. `setInterval`
 4. Promise
+   The browser waits for the promise to be resolved. Once the promise is resolved, the `then` callback function is pushed into the respective Queue.
 
 ## What is Event Loop?
 
@@ -107,10 +110,10 @@ Call stack:
 - greeting
 ```
 
-## Task and Task Queue
+## Macro-Task and Macro-Task Queue
 
-A task queue is a set of tasks.
-Task queues are sets, not queues, because the event loop processing model grabs the first runnable task from the chosen queue, instead of dequeuing the first task.
+A task or macrotask queue is a set of tasks.
+Macrotask queues are sets, not queues, because the event loop processing model grabs the first runnable task from the chosen queue, instead of dequeuing the first task.
 
 ## Microtask, Microtask Queue and `queueMicrotask()`
 
@@ -122,8 +125,11 @@ The microtask queue is prioritized over task queue.
 
 ## Event loop schedule
 
+<img src={EventLoopPriority} alt="Event Loop Priority GIF" />
+
 Immediately after every task, the engine executes all tasks from microtask queue, prior to running any other tasks or rendering or anything else.
 All microtasks are completed before any other event handling or rendering or any other macrotask takes place.
+This allows asynchronous tasks to be processed without blocking the main thread.
 If we'd like to execute a function asynchronously (after the current code), but before changes are rendered or new events handled, we can schedule it with queueMicrotask.
 
 So the event loop algorithm works in this sequence:
@@ -147,6 +153,19 @@ queueMicrotask(() => {
 
 console.log(5);
 ```
+
+<details>
+  <summary>Console output:</summary>
+  <code>
+    <ol>
+      <li>5</li>
+      <li>1</li>
+      <li>3</li>
+      <li>4</li>
+      <li>2</li>
+    </ol>
+  </code>
+</details>
 
 ```js
 (() => {
@@ -194,6 +213,21 @@ setTimeout(() => console.log(6));
 
 console.log(7);
 ```
+
+<details>
+  <summary>Console output:</summary>
+  <code>
+    <ol>
+      <li>1</li>
+      <li>7</li>
+      <li>3</li>
+      <li>5</li>
+      <li>2</li>
+      <li>6</li>
+      <li>4</li>
+    </ol>
+  </code>
+</details>
 
 ## References
 
