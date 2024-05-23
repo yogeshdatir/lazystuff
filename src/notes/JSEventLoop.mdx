@@ -1,0 +1,237 @@
+import { Meta } from '@storybook/blocks';
+import EventLoop from './assets/event-loop.gif';
+import EventLoopPriority from './assets/event-loop priority.gif';
+
+<Meta title="Notes/JavaScript Event Loop" />
+
+# JavaScript Event Loop
+
+## Synchronous vs. Asynchronous Programming
+
+In this synchronous code, the actions happen sequentially. Each line executes one after the other, in the order they appear in the code.
+
+Example: Imagine a chef working in a kitchen.
+
+```js
+console.log(“Start”);
+console.log(“Chopping vegetables…”);
+console.log(“Finished chopping vegetables.”);
+console.log(“Serve the dish.”);
+console.log(“End”);
+```
+
+will print
+
+```console
+Start
+Chopping vegetables…
+Finished chopping vegetables.
+Serve the dish.
+End
+```
+
+In this asynchronous code, tasks can overlap and occur independently. Multiple task executions can occur concurrently.
+
+Example:
+
+```js
+console.log(“Start”);
+setTimeout(() => {
+ console.log(“Timer done.”);
+}, 2000);
+console.log(“Continue with other tasks…”);
+console.log(“End”);
+```
+
+will print
+
+```console
+Start
+Continue with other tasks…
+End
+Timer done.
+```
+
+In this asynchronous code, we use `setTimeout` to simulate a time delay.  
+JavaScript's event loop enables this multitasking capability by efficiently handling asynchronous operations, ensuring that your web applications remain responsive and efficient, even when dealing with numerous tasks simultaneously.
+
+## Some Common Asynchronous APIs
+
+1. `fetch`
+2. `setTimeout`
+   The browser handles the timer for setTimeout. Once the timer expires, the callback function is pushed into the respective Queue.
+3. `setInterval`
+4. Promise
+   The browser waits for the promise to be resolved. Once the promise is resolved, the `then` callback function is pushed into the respective Queue.
+
+## What is Event Loop?
+
+> The event loop concept is very simple. There's an endless loop, where the JavaScript engine waits for tasks, executes them and then sleeps, waiting for more tasks.
+
+The event loop is responsible to keep a JavaScript program responsive and efficient.
+
+## Why do we need event loop?
+
+JavaScript is a single-threaded programming language. It can handle single task execution at a time.
+
+## Event Loop Visual
+
+<img src={EventLoop} alt="Event Loop Visual" />
+
+## Call stack
+
+A call stack is a mechanism for an interpreter (like the JavaScript interpreter in a web browser) to keep track of its place in a script that calls multiple functions — what function is currently being run and what functions are called from within that function, etc.
+
+- When a script calls a function, the interpreter adds it to the call stack and then starts carrying out the function.
+- Any functions that are called by that function are added to the call stack further up, and run where their calls are reached.
+- When the current function is finished, the interpreter takes it off the stack and resumes execution where it left off in the last code listing.
+- If the stack takes up more space than it was assigned, a "stack overflow" error is thrown.
+
+```js
+function greeting() {
+  // [1] Some code here
+  sayHi();
+  // [2] Some code here
+}
+function sayHi() {
+  return 'Hi!';
+}
+
+// Invoke the `greeting` function
+greeting();
+
+// [3] Some code here
+```
+
+Call stack:
+
+```console
+- sayHi
+- greeting
+```
+
+## Macro-Task and Macro-Task Queue
+
+A task or macrotask queue is a set of tasks.
+Macrotask queues are sets, not queues, because the event loop processing model grabs the first runnable task from the chosen queue, instead of dequeuing the first task.
+
+## Microtask, Microtask Queue and `queueMicrotask()`
+
+Each event loop has a microtask queue, which is a queue of microtasks, initially empty. A microtask is a colloquial way of referring to a task that was created via the queue a microtask algorithm.
+
+## Queue Priority
+
+The microtask queue is prioritized over task queue.
+
+## Event loop schedule
+
+<img src={EventLoopPriority} alt="Event Loop Priority GIF" />
+
+Immediately after every task, the engine executes all tasks from microtask queue, prior to running any other tasks or rendering or anything else.
+All microtasks are completed before any other event handling or rendering or any other macrotask takes place.
+This allows asynchronous tasks to be processed without blocking the main thread.
+If we'd like to execute a function asynchronously (after the current code), but before changes are rendered or new events handled, we can schedule it with queueMicrotask.
+
+So the event loop algorithm works in this sequence:
+
+1. Execute the first runnable task from the task queue.
+2. Execute all microtask in the microtask queue.
+3. Render changes if any.
+4. Execute the first runnable task from the task queue or wait for it.
+
+## Challenges
+
+```js
+Promise.resolve().then(() => console.log(1));
+
+setTimeout(() => console.log(2), 0);
+
+queueMicrotask(() => {
+  console.log(3);
+  queueMicrotask(() => console.log(4));
+});
+
+console.log(5);
+```
+
+<details>
+  <summary>Console output:</summary>
+  <code>
+    <ol>
+      <li>5</li>
+      <li>1</li>
+      <li>3</li>
+      <li>4</li>
+      <li>2</li>
+    </ol>
+  </code>
+</details>
+
+```js
+(() => {
+  console.log('this is the start');
+
+  setTimeout(() => {
+    console.log('Callback 1: this is a msg from call back');
+  }); // has a default time value of 0
+
+  console.log('this is just a message');
+
+  setTimeout(() => {
+    console.log('Callback 2: this is a msg from call back');
+  }, 0);
+
+  console.log('this is the end');
+})();
+```
+
+<details>
+  <summary>Console output:</summary>
+  <code>
+    <ol>
+      <li>"this is the start"</li>
+      <li>"this is just a message"</li>
+      <li>"this is the end"</li>
+      <li>"Callback 1: this is a msg from call back"</li>
+      <li>"Callback 2: this is a msg from call back"</li>
+    </ol>
+  </code>
+</details>
+
+```js
+console.log(1);
+
+setTimeout(() => console.log(2));
+
+Promise.resolve().then(() => console.log(3));
+
+Promise.resolve().then(() => setTimeout(() => console.log(4)));
+
+Promise.resolve().then(() => console.log(5));
+
+setTimeout(() => console.log(6));
+
+console.log(7);
+```
+
+<details>
+  <summary>Console output:</summary>
+  <code>
+    <ol>
+      <li>1</li>
+      <li>7</li>
+      <li>3</li>
+      <li>5</li>
+      <li>2</li>
+      <li>6</li>
+      <li>4</li>
+    </ol>
+  </code>
+</details>
+
+## References
+
+1. [The Event Loop Demystified - How JavaScript Handles Asynchronous Operations](https://medium.com/@Adekola_Olawale/the-event-loop-demystified-171eebf8c0d9) By Adekola Olawale on Medium
+2. [javascript.info - Event Loop](https://javascript.info/event-loop)
+3. [Difference between microtask and macrotask queue in the event loop](https://dev.to/jeetvora331/difference-between-microtask-and-macrotask-queue-in-the-event-loop-4i4i) By jeetvora331 on Dev.io
+4. https://html.spec.whatwg.org/multipage/webappapis.html#event-loops
