@@ -1,1 +1,35 @@
-# Comming soon...
+# Github Actions
+
+GitHub Actions optimize code-delivery time, from idea to deployment, on a community-powered platform.
+
+1. Learn what GitHub Actions are, the types of actions, and where to find them.
+2. Identify the required components within a GitHub Actions workflow file.
+3. Plan the automation of your software-development lifecycle with GitHub Actions workflows.
+4. Create a container action and have it run in a workflow that's triggered by a push event to your GitHub repository.
+
+## What is GitHub Actions?
+
+GitHub Actions are **_packaged scripts to automate tasks_** in a software-development workflow in GitHub.  
+You can configure GitHub Actions to trigger complex workflows that meet your organization's needs;
+
+- each time developers check new source code into a specific branch,
+- at timed intervals, or
+- manually.
+
+The result is a reliable and sustainable automated workflow, which leads to a significant decrease in development time.
+
+GitHub Actions are scripts that adhere to a yml data format.
+
+## Types of Github Actions:
+
+There are three types of GitHub actions:
+
+1. container actions,
+2. JavaScript actions, and
+3. composite actions.
+
+With **container actions**, the environment is part of the action's code. These actions can only be run in a Linux environment that GitHub hosts. Container actions support many different languages.
+
+**JavaScript actions** don't include the environment in the code. You'll have to specify the environment to execute these actions. You can run these actions in a VM in the cloud or on-premises. JavaScript actions support Linux, macOS, and Windows environments.
+
+**Composite actions** allow you to combine multiple workflow steps within one action. For example, you can use this feature to bundle together multiple run commands into an action, and then have a workflow that executes the bundled commands as a single step using that action.
