@@ -8,7 +8,8 @@ import EventLoopPriority from './assets/event-loop priority.gif';
 
 ## Synchronous vs. Asynchronous Programming
 
-In this synchronous code, the actions happen sequentially. Each line executes one after the other, in the order they appear in the code.
+In this synchronous code, the actions happen sequentially.  
+Each line executes one after the other, in the order they appear in the code.
 
 Example: Imagine a chef working in a kitchen.
 
@@ -30,7 +31,8 @@ Serve the dish.
 End
 ```
 
-In this asynchronous code, tasks can overlap and occur independently. Multiple task executions can occur concurrently.
+In this asynchronous code, tasks can overlap and occur independently.  
+Multiple task executions can occur concurrently.
 
 Example:
 
@@ -54,15 +56,6 @@ Timer done.
 
 In this asynchronous code, we use `setTimeout` to simulate a time delay.  
 JavaScript's event loop enables this multitasking capability by efficiently handling asynchronous operations, ensuring that your web applications remain responsive and efficient, even when dealing with numerous tasks simultaneously.
-
-## Some Common Asynchronous APIs
-
-1. `fetch`
-2. `setTimeout`
-   The browser handles the timer for setTimeout. Once the timer expires, the callback function is pushed into the respective Queue.
-3. `setInterval`
-4. Promise
-   The browser waits for the promise to be resolved. Once the promise is resolved, the `then` callback function is pushed into the respective Queue.
 
 ## What is Event Loop?
 
@@ -110,36 +103,51 @@ Call stack:
 - greeting
 ```
 
-## Macro-Task and Macro-Task Queue
+## Macrotask and Macrotask Queue/Callback Queue
 
 A task or macrotask queue is a set of tasks.
 Macrotask queues are sets, not queues, because the event loop processing model grabs the first runnable task from the chosen queue, instead of dequeuing the first task.
 
 ## Microtask, Microtask Queue and `queueMicrotask()`
 
-Each event loop has a microtask queue, which is a queue of microtasks, initially empty. A microtask is a colloquial way of referring to a task that was created via the queue a microtask algorithm.
+Each event loop has a microtask queue, which is a queue of microtasks, initially empty.  
+A microtask is a colloquial way of referring to a task that was created via the queue a microtask algorithm.  
+Microtask Queue gets the callback functions coming through Promises and Mutation Observer.
 
 ## Queue Priority
 
-The microtask queue is prioritized over task queue.
+The microtask queue is prioritized over macrotask queue.
 
 ## Event loop schedule
 
 <img src={EventLoopPriority} alt="Event Loop Priority GIF" />
 
-Immediately after every task, the engine executes all tasks from microtask queue, prior to running any other tasks or rendering or anything else.
-All microtasks are completed before any other event handling or rendering or any other macrotask takes place.
-This allows asynchronous tasks to be processed without blocking the main thread.
+Immediately after every task, the engine executes all tasks from microtask queue, prior to running any other tasks or rendering or anything else.  
+All microtasks are completed before any other event handling or rendering or any other macrotask takes place.  
+This allows asynchronous tasks to be processed without blocking the main thread.  
 If we'd like to execute a function asynchronously (after the current code), but before changes are rendered or new events handled, we can schedule it with queueMicrotask.
 
-So the event loop algorithm works in this sequence:
+So the event loop algorithm works in following sequence:
 
 1. Execute the first runnable task from the task queue.
 2. Execute all microtask in the microtask queue.
 3. Render changes if any.
 4. Execute the first runnable task from the task queue or wait for it.
 
+## Some Common Asynchronous browser APIs
+
+1. Promise  
+   The browser waits for the promise to be resolved. Once the promise is resolved, the `then` callback function is pushed into the microtask Queue.
+2. `fetch`  
+   `fetch` is a promise-based API, so it is executed in same way as promise API.
+3. `setTimeout`  
+   The browser handles the timer for `setTimeout`. Once the timer expires, the callback function is pushed into the macrotask Queue.
+4. `setInterval`  
+   The browser handles the timer for `setInterval`. The callback function is repeatedly pushed into the macrotask Queue, with a fixed time delay between each call.
+
 ## Challenges
+
+**What will be the outputs of these code snippets?**
 
 ```js
 Promise.resolve().then(() => console.log(1));
