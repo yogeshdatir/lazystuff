@@ -1,5 +1,12 @@
-import React from "react";
-import { getTableData } from "./TableWReactVirtualized";
+import React from 'react';
+
+export const getTableData = () => {
+  let list: any = [];
+  for (let i = 0; i < 10000; i++) {
+    list.push({ name: `${i} Brian Vaughn`, description: 'Software engineer' });
+  }
+  return list;
+};
 
 interface Props {}
 
