@@ -5,7 +5,7 @@ import {
   AccordionContainer,
   AccordionDivider,
 } from './Accordion.styled';
-import { ReactComponent as ArrowDown } from '../../assets/icon-arrow-down.svg';
+import ArrowDown from '../../assets/icon-arrow-down.svg';
 
 interface IProps {
   title: string;

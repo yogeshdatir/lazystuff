@@ -2,7 +2,7 @@
 // Repo: https://github.com/WebDevSimplified/react-select
 
 import React, { KeyboardEvent, MouseEvent, useRef, useState } from 'react';
-import { ReactComponent as CheckedIcon } from '../../../../assets/icons8-done.svg';
+import CheckedIcon from '../../../../assets/icons8-done.svg';
 import useClickOutside from '../../../../hooks/useClickOutside';
 import { useEffect } from 'react';
 import {
