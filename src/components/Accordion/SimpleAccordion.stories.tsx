@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 import SimpleAccordion from './SimpleAccordion';
 
 const meta: Meta<typeof SimpleAccordion> = {

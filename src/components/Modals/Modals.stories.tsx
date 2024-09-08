@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import DialogModal from './DialogModal';
 
@@ -19,5 +19,5 @@ export const HTMLDialogModal: Story = {
 };
 
 HTMLDialogModal.args = {
-  variant: 'withButtonFormMethod'
-}
+  variant: 'withButtonFormMethod',
+};
