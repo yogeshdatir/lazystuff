@@ -1,27 +1,27 @@
-import { TBoardType } from './TicTacToe';
+import { BOX_DIMENSION, TBoardValuesType } from './TicTacToe';
 
-export type TIndices = {
-  rowIndex: number;
-  columnIndex: number;
-};
+export type TBoxIndex = number;
 
 export type TOnClickHandle = (
   event: React.MouseEvent<HTMLButtonElement>,
-  indices: TIndices
+  boxIndex: TBoxIndex
 ) => void;
 
 type Props = {
+  rowSize: number;
   onClickHandle: TOnClickHandle;
-  boardValues: TBoardType;
-  indices: TIndices;
+  boardValues: TBoardValuesType;
+  boxIndex: number;
 };
 
-const Box = ({ onClickHandle, boardValues, indices }: Props) => {
-  const { rowIndex, columnIndex } = indices;
-
+const Box = ({ rowSize, onClickHandle, boardValues, boxIndex }: Props) => {
   return (
-    <button className="box" onClick={(event) => onClickHandle(event, indices)}>
-      {boardValues?.[rowIndex]?.[columnIndex] ?? ''}
+    <button
+      className="box"
+      style={{ height: `${BOX_DIMENSION}px`, flex: `0 0 ${100 / rowSize}%` }}
+      onClick={(event) => onClickHandle(event, boxIndex)}
+    >
+      {boardValues?.[boxIndex] ?? boxIndex}
     </button>
   );
 };
