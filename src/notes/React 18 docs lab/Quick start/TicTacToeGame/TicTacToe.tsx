@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Board from './Board';
 import './TicTacToe.styles.css';
 import { TBoxIndex } from './Box';
+import { INITIAL_RESULT, useGameContext } from './GameContext';
 
 export const BOX_DIMENSION = 54;
 
@@ -12,24 +13,32 @@ export type TGameResult = {
   winningCombo: number[];
 };
 
-type Props = {
-  rowSize?: number;
-};
+const TicTacToe = () => {
+  const {
+    rowSize,
+    setRowSize,
+    result,
+    setResult,
+    boardValues,
+    setBoardValues,
+    gameReset,
+  } = useGameContext();
 
-const TicTacToe = ({ rowSize = 3 }: Props) => {
-  const boardSize = rowSize * rowSize;
+  const [rowSizeInput, setRowSizeInput] = useState<number>(3);
+
   const charsUsed = ['X', 'O'];
   const [playerTurn, setPlayerTurn] = useState<1 | 0>(0);
-  const [boardValues, setBoardValues] = useState<TBoardValuesType>([
-    ...Array(boardSize),
-  ]);
-  const [result, setResult] = useState<TGameResult>({
-    winnerIndex: -1,
-    winningCombo: [],
-  });
   const { winnerIndex, winningCombo } = result;
   const winner = charsUsed[winnerIndex];
   let winningCombos: number[][] = calculateWinningCombos(rowSize);
+
+  const updateRowSizeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRowSizeInput(Number(e.target.value));
+  };
+
+  const updateGameSize = () => {
+    gameReset(rowSizeInput);
+  };
 
   const onClickHandle = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -52,15 +61,22 @@ const TicTacToe = ({ rowSize = 3 }: Props) => {
 
   return (
     <>
+      <div>
+        <label>
+          <input
+            value={rowSizeInput}
+            type="number"
+            onChange={updateRowSizeInput}
+          />
+        </label>
+        <button onClick={updateGameSize}>Set Game Size</button>
+      </div>
       <Board
         style={{
           width: `${rowSize * BOX_DIMENSION}px`,
         }}
         className={`board ${winner ? 'game-over' : 'game-in-progress'}`}
-        rowSize={rowSize}
         onClickHandle={onClickHandle}
-        boardValues={boardValues}
-        result={result}
       />
       {winner && <p>{`${winner} is the winner.`}</p>}
     </>
@@ -110,7 +126,7 @@ const checkWinner = (
   let winnerCount: {
     [x: string]: number;
   } = {};
-  let result: TGameResult = { winnerIndex: -1, winningCombo: [] };
+  let result: TGameResult = INITIAL_RESULT;
 
   winningCombos.forEach((winningCombo) => {
     winnerCount = {

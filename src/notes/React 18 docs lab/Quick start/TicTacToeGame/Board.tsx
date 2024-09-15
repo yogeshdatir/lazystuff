@@ -1,34 +1,29 @@
 import Box, { TOnClickHandle } from './Box';
+import { useGameContext } from './GameContext';
 import { TBoardValuesType, TGameResult } from './TicTacToe';
 
 type Props = {
-  rowSize: number;
   onClickHandle: TOnClickHandle;
-  boardValues: TBoardValuesType;
-  result: TGameResult;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const Board = ({
-  rowSize,
-  onClickHandle,
-  boardValues,
-  result,
-  ...rest
-}: Props) => {
+const Board = ({ onClickHandle, ...rest }: Props) => {
+  const { rowSize, boardValues, result } = useGameContext();
+
   return (
     <div {...rest}>
-      {boardValues.map((_, boxIndex) => {
-        return (
-          <Box
-            key={boxIndex}
-            rowSize={rowSize}
-            onClickHandle={onClickHandle}
-            boardValues={boardValues}
-            boxIndex={boxIndex}
-            result={result}
-          />
-        );
-      })}
+      {boardValues?.length > 0 &&
+        boardValues.map((_, boxIndex) => {
+          return (
+            <Box
+              key={boxIndex}
+              rowSize={rowSize}
+              onClickHandle={onClickHandle}
+              boardValues={boardValues}
+              boxIndex={boxIndex}
+              result={result}
+            />
+          );
+        })}
     </div>
   );
 };

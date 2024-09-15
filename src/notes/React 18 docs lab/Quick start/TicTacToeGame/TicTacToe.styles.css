@@ -17,8 +17,6 @@
     margin-top: -1px;
     text-align: center;
 
-    transition: all 0.5s ease;
-
     &.won {
       background-color: gold;
     }
