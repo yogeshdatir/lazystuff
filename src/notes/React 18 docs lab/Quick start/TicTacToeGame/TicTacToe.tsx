@@ -3,6 +3,7 @@ import Board from './Board';
 import './TicTacToe.styles.css';
 import { TBoxIndex } from './Box';
 import { INITIAL_RESULT, useGameContext } from './GameContext';
+import RowSizeInput from './RowSizeInput';
 
 export const BOX_DIMENSION = 54;
 
@@ -14,31 +15,14 @@ export type TGameResult = {
 };
 
 const TicTacToe = () => {
-  const {
-    rowSize,
-    setRowSize,
-    result,
-    setResult,
-    boardValues,
-    setBoardValues,
-    gameReset,
-  } = useGameContext();
-
-  const [rowSizeInput, setRowSizeInput] = useState<number>(3);
+  const { rowSize, result, setResult, boardValues, setBoardValues } =
+    useGameContext();
 
   const charsUsed = ['X', 'O'];
   const [playerTurn, setPlayerTurn] = useState<1 | 0>(0);
-  const { winnerIndex, winningCombo } = result;
+  const { winnerIndex } = result;
   const winner = charsUsed[winnerIndex];
   let winningCombos: number[][] = calculateWinningCombos(rowSize);
-
-  const updateRowSizeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRowSizeInput(Number(e.target.value));
-  };
-
-  const updateGameSize = () => {
-    gameReset(rowSizeInput);
-  };
 
   const onClickHandle = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -60,17 +44,8 @@ const TicTacToe = () => {
   };
 
   return (
-    <>
-      <div>
-        <label>
-          <input
-            value={rowSizeInput}
-            type="number"
-            onChange={updateRowSizeInput}
-          />
-        </label>
-        <button onClick={updateGameSize}>Set Game Size</button>
-      </div>
+    <div className="gameContainer">
+      <RowSizeInput />
       <Board
         style={{
           width: `${rowSize * BOX_DIMENSION}px`,
@@ -79,7 +54,7 @@ const TicTacToe = () => {
         onClickHandle={onClickHandle}
       />
       {winner && <p>{`${winner} is the winner.`}</p>}
-    </>
+    </div>
   );
 };
 

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, useState } from 'react';
 import { TBoardValuesType, TGameResult } from './TicTacToe';
 
 /*

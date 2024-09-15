@@ -1,40 +1,51 @@
-.board {
+.gameContainer {
   &,
   * {
     box-sizing: border-box;
   }
 
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
 
-  .box {
-    background: #fff;
-    border: 1px solid #999;
-    font-size: 24px;
-    font-weight: bold;
-    line-height: 34px;
-    margin-right: -1px;
-    margin-top: -1px;
-    text-align: center;
-
-    &.won {
-      background-color: gold;
-    }
+  .rowSizeForm {
+    display: flex;
+    gap: 1rem;
   }
 
-  &.game-in-progress {
-    .box {
-      cursor: pointer;
+  .board {
+    display: flex;
+    flex-wrap: wrap;
 
-      &:hover {
-        background-color: aquamarine;
+    .box {
+      background: #fff;
+      border: 1px solid #999;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 34px;
+      margin-right: -1px;
+      margin-top: -1px;
+      text-align: center;
+
+      &.won {
+        background-color: gold;
       }
     }
-  }
 
-  &.game-over {
-    .box {
-      cursor: not-allowed;
+    &.game-in-progress {
+      .box {
+        cursor: pointer;
+
+        &:hover {
+          background-color: aquamarine;
+        }
+      }
+    }
+
+    &.game-over {
+      .box {
+        cursor: not-allowed;
+      }
     }
   }
 }

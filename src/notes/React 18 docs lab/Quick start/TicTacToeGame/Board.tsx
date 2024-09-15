@@ -1,6 +1,5 @@
 import Box, { TOnClickHandle } from './Box';
 import { useGameContext } from './GameContext';
-import { TBoardValuesType, TGameResult } from './TicTacToe';
 
 type Props = {
   onClickHandle: TOnClickHandle;
