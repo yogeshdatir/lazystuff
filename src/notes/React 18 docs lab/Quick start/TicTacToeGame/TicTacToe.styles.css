@@ -8,7 +8,6 @@
   flex-wrap: wrap;
 
   .box {
-    cursor: pointer;
     background: #fff;
     border: 1px solid #999;
     font-size: 24px;
@@ -17,5 +16,27 @@
     margin-right: -1px;
     margin-top: -1px;
     text-align: center;
+
+    transition: all 0.5s ease;
+
+    &.won {
+      background-color: gold;
+    }
+  }
+
+  &.game-in-progress {
+    .box {
+      cursor: pointer;
+
+      &:hover {
+        background-color: aquamarine;
+      }
+    }
+  }
+
+  &.game-over {
+    .box {
+      cursor: not-allowed;
+    }
   }
 }

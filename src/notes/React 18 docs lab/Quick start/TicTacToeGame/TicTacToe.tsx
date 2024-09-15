@@ -7,6 +7,11 @@ export const BOX_DIMENSION = 54;
 
 export type TBoardValuesType = string[];
 
+export type TGameResult = {
+  winnerIndex: number;
+  winningCombo: number[];
+};
+
 type Props = {
   rowSize?: number;
 };
@@ -18,7 +23,12 @@ const TicTacToe = ({ rowSize = 3 }: Props) => {
   const [boardValues, setBoardValues] = useState<TBoardValuesType>([
     ...Array(boardSize),
   ]);
-  const [winner, setWinner] = useState<number>(-1);
+  const [result, setResult] = useState<TGameResult>({
+    winnerIndex: -1,
+    winningCombo: [],
+  });
+  const { winnerIndex, winningCombo } = result;
+  const winner = charsUsed[winnerIndex];
   let winningCombos: number[][] = calculateWinningCombos(rowSize);
 
   const onClickHandle = (
@@ -27,7 +37,7 @@ const TicTacToe = ({ rowSize = 3 }: Props) => {
   ) => {
     event.preventDefault();
 
-    if (winner > -1) return;
+    if (winnerIndex > -1) return;
 
     const updatedBoardValues = [...boardValues];
 
@@ -36,7 +46,8 @@ const TicTacToe = ({ rowSize = 3 }: Props) => {
       setBoardValues(updatedBoardValues);
       setPlayerTurn((prevPlayer) => (prevPlayer === 1 ? 0 : 1));
     }
-    setWinner(checkWinner(updatedBoardValues, winningCombos, charsUsed));
+    const newResult = checkWinner(updatedBoardValues, winningCombos, charsUsed);
+    setResult(newResult);
   };
 
   return (
@@ -45,11 +56,13 @@ const TicTacToe = ({ rowSize = 3 }: Props) => {
         style={{
           width: `${rowSize * BOX_DIMENSION}px`,
         }}
+        className={`board ${winner ? 'game-over' : 'game-in-progress'}`}
         rowSize={rowSize}
         onClickHandle={onClickHandle}
         boardValues={boardValues}
+        result={result}
       />
-      {winner > -1 && <p>{`${charsUsed[winner]} is the winner.`}</p>}
+      {winner && <p>{`${winner} is the winner.`}</p>}
     </>
   );
 };
@@ -97,7 +110,7 @@ const checkWinner = (
   let winnerCount: {
     [x: string]: number;
   } = {};
-  let winner = -1;
+  let result: TGameResult = { winnerIndex: -1, winningCombo: [] };
 
   winningCombos.forEach((winningCombo) => {
     winnerCount = {
@@ -112,10 +125,14 @@ const checkWinner = (
         winnerCount[player1] = winnerCount[player1] + 1;
     });
 
-    if (winnerCount[player0] === winningCombo.length) winner = 0;
-    if (winnerCount[player1] === winningCombo.length) winner = 1;
+    if (winnerCount[player0] === winningCombo.length) {
+      result = { winnerIndex: 0, winningCombo: [...winningCombo] };
+    }
+    if (winnerCount[player1] === winningCombo.length) {
+      result = { winnerIndex: 1, winningCombo: [...winningCombo] };
+    }
   });
-  return winner;
+  return result;
 };
 
 export default TicTacToe;

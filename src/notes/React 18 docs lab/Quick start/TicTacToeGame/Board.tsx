@@ -1,15 +1,22 @@
 import Box, { TOnClickHandle } from './Box';
-import { TBoardValuesType } from './TicTacToe';
+import { TBoardValuesType, TGameResult } from './TicTacToe';
 
 type Props = {
   rowSize: number;
   onClickHandle: TOnClickHandle;
   boardValues: TBoardValuesType;
+  result: TGameResult;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-const Board = ({ rowSize, onClickHandle, boardValues, ...rest }: Props) => {
+const Board = ({
+  rowSize,
+  onClickHandle,
+  boardValues,
+  result,
+  ...rest
+}: Props) => {
   return (
-    <div {...rest} className="board">
+    <div {...rest}>
       {boardValues.map((_, boxIndex) => {
         return (
           <Box
@@ -18,6 +25,7 @@ const Board = ({ rowSize, onClickHandle, boardValues, ...rest }: Props) => {
             onClickHandle={onClickHandle}
             boardValues={boardValues}
             boxIndex={boxIndex}
+            result={result}
           />
         );
       })}
