@@ -1,3 +1,4 @@
+import { useRef, useCallback } from 'react';
 import CustomVirtualGrid from './CustomVirtualGrid';
 
 const generateRandomData = (rowsLen: number, colsLen: number) => {
@@ -20,16 +21,30 @@ const generateRandomData = (rowsLen: number, colsLen: number) => {
 
 const Demo = () => {
   const [data, columns] = generateRandomData(200, 1000);
+  const sizeMap = useRef<any>({});
+  const gridRef = useRef<any>();
+  const setSize = useCallback((index: any, size: any) => {
+    // console.log(index, size);
+    if(sizeMap.current[index] > size) return;
+    sizeMap.current = { ...sizeMap.current, [index]: size };
+    
+    gridRef.current.resetAfterIndices({columnIndex: 0, rowIndex: 0, shouldForceUpdate: true});
+  }, []);
+  const getSize = useCallback((index: number) => {
+    // console.log(sizeMap.current);
+    return sizeMap.current[index] || 50
+  }, []);
 
   return (
     <div>
       <h1>Virtual Grid Example</h1>
       <CustomVirtualGrid
         fixedColumnWidths={[150, 150, 150, 130]}
+        itemDate={data}
         height={800}
         width={1700}
         overscanRowCount={5}
-        rowHeight={() => 30}
+        rowHeight={getSize}
         headerHeight={30}
         rowCount={data.length}
         columns={columns}
@@ -42,6 +57,8 @@ const Demo = () => {
           const columnKey = columns[columnIndex].key;
           return row[columnKey];
         }}
+        setSize={setSize}
+        gridRef={gridRef} 
       />
     </div>
   );

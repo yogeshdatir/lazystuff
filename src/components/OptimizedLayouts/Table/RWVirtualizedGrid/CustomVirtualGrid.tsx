@@ -1,4 +1,4 @@
-import { createContext, forwardRef, Key, useContext } from 'react';
+import { createContext, forwardRef, Key, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
 import './index.css';
 
@@ -52,22 +52,60 @@ const headerBuilder = (
   return columns;
 };
 
+export const useWindowResize = () => {
+  const [size, setSize] = useState([0, 0]);
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+
+    window.addEventListener("resize", updateSize);
+    updateSize();
+
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
+  return size;
+};
+
+
 const GridCellRender = ({
   rowIndex,
   columnIndex,
   style,
   fixedColumnCount,
   cellRenderer,
+  setRowHeight
 }: any) => {
+  const cellRef = useRef<any>({});
+
+  useEffect(() => {
+    if (cellRef.current) {
+      console.log(cellRef.current);
+      
+      setRowHeight(rowIndex, cellRef.current.clientHeight);
+    }
+    // eslint-disable-next-line
+  }, [cellRef]);
+
   if (columnIndex < fixedColumnCount) {
     return null;
   }
   return (
     <div
+      ref={cellRef}
       className={`sticky-grid__data__column grid-row-${rowIndex}`}
-      style={style}
+      style={{...style, height: 'auto', display: 'flex', flexDirection: 'column'}}
     >
-      {cellRenderer(columnIndex, rowIndex)}
+      {columnIndex % 2 === 0 && (<div style={{ backgroundColor: 'lightgray', display: 'flex', flexDirection: 'column' }}>
+              <p>something</p>
+              <p>something</p>
+              <p>something</p>
+              <p>something</p>
+            </div>)
+          }
+              {cellRenderer(columnIndex, rowIndex)}
     </div>
   );
 };
@@ -253,13 +291,13 @@ const InnerGridElementType = forwardRef(({ children, ...rest }: any, ref) => {
         getFixedColumnWidth={getFixedColumnWidth}
         headerRenderer={headerRenderer}
       />
-      <StickyColumns
+      {/* <StickyColumns
         columns={leftSideColumns}
         headerHeight={headerHeight}
         sumOfFixedColumnWidth={sumOfFixedColumnWidth}
         fixedColumnCount={fixedColumnCount}
         getFixedColumnWidth={getFixedColumnWidth}
-      />
+      /> */}
 
       <div
         className="sticky-grid__data__container"
@@ -279,6 +317,7 @@ const CustomVirtualGrid = ({
   cellRenderer,
   columns,
   fixedColumnWidths,
+  setSize,gridRef,
   ...rest
 }: any) => {
   const sumOfFixedColumnWidth = fixedColumnWidths.reduce(
@@ -293,6 +332,7 @@ const CustomVirtualGrid = ({
   });
   const getFixedColumnWidth = (index: number) => fixedColumnWidths[index];
   const getColumnWidth = (index: number) => columnWidths[index];
+  const [windowWidth] = useWindowResize();
 
   return (
     <StickyGridContext.Provider
@@ -311,6 +351,7 @@ const CustomVirtualGrid = ({
       }}
     >
       <Grid
+      ref={gridRef}
         rowHeight={rowHeight}
         columnCount={columnCount}
         innerElementType={InnerGridElementType}
@@ -318,13 +359,14 @@ const CustomVirtualGrid = ({
         columnWidth={getColumnWidth}
         {...rest}
       >
-        {({ rowIndex, columnIndex, style }: any) => (
+        {({ rowIndex, columnIndex, style, data }: any) => (
           <GridCellRender
             rowIndex={rowIndex}
             columnIndex={columnIndex}
             style={style}
             fixedColumnCount={fixedColumnCount}
             cellRenderer={cellRenderer}
+            setRowHeight={setSize}
           />
         )}
       </Grid>
