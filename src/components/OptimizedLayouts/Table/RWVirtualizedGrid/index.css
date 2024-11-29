@@ -85,9 +85,3 @@
   position: absolute;
   left: 0 !important;
 }
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}

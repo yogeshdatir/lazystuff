@@ -1,13 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import styles from './styles';
-import './index.css';
 
 const SimpleVirtualList = () => {
   // References
   const listRef = useRef<any>();
   const rowHeights = useRef<any>();
+  const [additionalItems, setAdditionalItems] = useState<number>(0);
 
   function getRowHeight(index: string | number) {
     return rowHeights?.current?.[index] ?? (0 + 8 || 82);
@@ -27,9 +27,19 @@ const SimpleVirtualList = () => {
       <div style={style}>
         <div ref={rowRef} style={styles.newMessageContainer}>
           <div style={styles.newMessage}>
-            {Array.from(Array(index).keys()).map((el) => (
-              <span key={el}>{el}</span>
-            ))}
+            {index % 2 === 0 ? (
+              <>
+                <div>{index}</div>
+                <div>{index}</div>
+              </>
+            ) : (
+              <>
+                <div>{index}</div>
+                <div>{index}</div>
+                <div>{index}</div>
+                <div>{index}</div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -42,20 +52,28 @@ const SimpleVirtualList = () => {
   }
 
   return (
-    <AutoSizer style={styles.messagesContainer}>
-      {({ height, width }) => (
-        <List
-          className="list"
-          height={height - 74}
-          itemCount={5}
-          itemSize={getRowHeight}
-          ref={listRef}
-          width={width}
-        >
-          {Row}
-        </List>
-      )}
-    </AutoSizer>
+    <>
+      <AutoSizer style={styles.messagesContainer}>
+        {({ height, width }) => (
+          <>
+            <List
+              height={height - 74}
+              itemCount={50 + additionalItems}
+              estimatedItemSize={150}
+              itemSize={getRowHeight}
+              ref={listRef}
+              width={width}
+            >
+              {Row}
+            </List>
+
+            <button onClick={() => setAdditionalItems((prev) => prev + 40)}>
+              View More
+            </button>
+          </>
+        )}
+      </AutoSizer>
+    </>
   );
 };
 
