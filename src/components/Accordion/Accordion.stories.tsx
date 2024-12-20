@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import AccordionCompoundComponent from './AccordionCompoundComponent';
+import CompoundAccordion from './CompoundAccordion';
 
 const meta: Meta<typeof SimpleAccordion> = {
   /* 👇 The title prop is optional.
@@ -64,6 +65,6 @@ export const Shadcn: ShadcnStory = {
 export const CustomAccordionWithCompoundComponent: CustomAccordionWCompoundComponentStory =
   {
     render: () => {
-      return <AccordionCompoundComponent />;
+      return <CompoundAccordion />;
     },
   };

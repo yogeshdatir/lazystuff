@@ -1,16 +1,23 @@
-const AccordionItem = () => {
+import { AccordionItemContainer } from './Accordion.styled';
+import { AccordionItemProvider } from './AccordionItemContext';
+import { useAccordionContext } from './AccordionContext';
+
+interface Props {
+  children: React.ReactNode;
+  value: string;
+}
+
+const AccordionItem = ({ children, value }: Props) => {
+  const { isItemActive, toggleItem } = useAccordionContext();
+
   return (
-    <div>
-      <h3>
-        <button className="w-full">
-          <span className="flex justify-between">
-            Accordion Title
-            <span>Accordion Icon</span>
-          </span>
-        </button>
-      </h3>
-      <div hidden>Accordion Content</div>
-    </div>
+    <AccordionItemProvider
+      value={value}
+      isExpanded={isItemActive(value)}
+      onToggle={() => toggleItem(value)}
+    >
+      <AccordionItemContainer>{children}</AccordionItemContainer>
+    </AccordionItemProvider>
   );
 };
 

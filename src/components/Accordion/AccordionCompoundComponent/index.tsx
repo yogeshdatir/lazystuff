@@ -1,40 +1,25 @@
 // type Props = {};
 
-import { useState } from 'react';
 import AccordionItem from './AccordionItem';
+import { AccordionContainer } from './Accordion.styled';
+import AccordionContent from './AccordionContent';
+import AccordionTrigger from './AccordionTrigger';
+import { AccordionProvider } from './AccordionContext';
 
-const Accordion = () => {
-  const [expandedItems, setExpandedItems] = useState([]);
+interface Props {
+  children: React.ReactNode;
+}
 
+const Accordion = ({ children }: Props) => {
   return (
-    <div>
-      <Accordion.AccordionItem />
-      <div>
-        <h3>
-          <button>
-            <span>
-              Accordion Title
-              <span>Accordion Icon</span>
-            </span>
-          </button>
-        </h3>
-        <div>Accordion Content</div>
-      </div>
-      <div>
-        <h3>
-          <button>
-            <span>
-              Accordion Title
-              <span>Accordion Icon</span>
-            </span>
-          </button>
-        </h3>
-        <div>Accordion Content</div>
-      </div>
-    </div>
+    <AccordionProvider>
+      <AccordionContainer>{children}</AccordionContainer>
+    </AccordionProvider>
   );
 };
 
 Accordion.AccordionItem = AccordionItem;
+Accordion.AccordionTrigger = AccordionTrigger;
+Accordion.AccordionContent = AccordionContent;
 
 export default Accordion;
