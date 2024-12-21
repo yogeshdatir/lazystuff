@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import AccordionCompoundComponent from './AccordionCompoundComponent';
 import CompoundAccordion from './CompoundAccordion';
 
 const meta: Meta<typeof SimpleAccordion> = {
@@ -22,7 +21,7 @@ export default meta;
 type PrimaryStory = StoryObj<typeof SimpleAccordion>;
 type ShadcnStory = StoryObj<typeof Accordion>;
 type CustomAccordionWCompoundComponentStory = StoryObj<
-  typeof AccordionCompoundComponent
+  typeof CompoundAccordion
 >;
 
 /*

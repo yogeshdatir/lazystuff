@@ -1,12 +1,16 @@
 import { AccordionTriggerButton } from './Accordion.styled';
 import { useAccordionItemContext } from './AccordionItemContext';
+import ArrowDown from '../../../assets/icon-arrow-down.svg?react';
+import { useAccordionContext } from './AccordionContext';
 
-interface Props {
+type Props = {
   children: React.ReactNode;
-}
+};
 
 const AccordionTrigger = ({ children }: Props) => {
-  const { onToggle } = useAccordionItemContext();
+  const { value, onToggle } = useAccordionItemContext();
+
+  const { isItemActive } = useAccordionContext();
 
   return (
     <AccordionTriggerButton
@@ -14,6 +18,7 @@ const AccordionTrigger = ({ children }: Props) => {
       onClick={onToggle}
     >
       {children}
+      <ArrowDown className={isItemActive(value) ? 'rotate' : ''} />
     </AccordionTriggerButton>
   );
 };

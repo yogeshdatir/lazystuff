@@ -3,14 +3,13 @@ import styled from '@emotion/styled';
 export const AccordionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   overflow: hidden;
 `;
 
 export const AccordionItemContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  border-bottom: 2px solid gray;
 `;
 
 export const AccordionItemTitle = styled.div`
@@ -19,15 +18,19 @@ export const AccordionItemTitle = styled.div`
   align-items: center;
 `;
 
-export const AccordionContentContainer = styled.div`
-  transition: height 0.3s ease-in-out;
+export const AccordionContentContainer = styled.div<{ contentHeight: number }>`
+  display: flex;
+  max-height: ${({ contentHeight }) => `${contentHeight}px`};
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  will-change: max-height;
 
-  &.show {
-    height: 100%;
+  svg {
+    transition: rotate 0.3s ease-in-out;
   }
 
   &.hide {
-    height: 0;
+    max-height: 0;
   }
 `;
 
@@ -36,4 +39,19 @@ export const AccordionTriggerButton = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 0;
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  svg {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  svg.rotate {
+    transform: rotate(180deg);
+  }
 `;
