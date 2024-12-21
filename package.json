@@ -4,8 +4,8 @@
   "private": false,
   "type": "module",
   "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
     "@radix-ui/react-accordion": "^1.2.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -91,5 +91,9 @@
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5",
     "webpack": "^5.74.0"
+  },
+  "resolutions": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0"
   }
 }

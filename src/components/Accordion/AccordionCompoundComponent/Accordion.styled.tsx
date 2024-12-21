@@ -24,7 +24,8 @@ export const AccordionItemTitle = styled.div`
 
 export const AccordionContentContainer = styled.div<AccordionContentContainerProps>`
   display: flex;
-  max-height: ${({ contentHeight }) => `${contentHeight}px`};
+  max-height: ${({ contentHeight }: AccordionContentContainerProps) =>
+    `${contentHeight}px`};
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
   will-change: max-height;
