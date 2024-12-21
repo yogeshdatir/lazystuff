@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
 
+type AccordionContentContainerProps = {
+  contentHeight: number;
+};
+
 export const AccordionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -18,7 +22,7 @@ export const AccordionItemTitle = styled.div`
   align-items: center;
 `;
 
-export const AccordionContentContainer = styled.div<{ contentHeight: number }>`
+export const AccordionContentContainer = styled.div<AccordionContentContainerProps>`
   display: flex;
   max-height: ${({ contentHeight }) => `${contentHeight}px`};
   overflow: hidden;
@@ -26,7 +30,7 @@ export const AccordionContentContainer = styled.div<{ contentHeight: number }>`
   will-change: max-height;
 
   svg {
-    transition: rotate 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
   }
 
   &.hide {
@@ -42,6 +46,11 @@ export const AccordionTriggerButton = styled.button`
   padding: 1rem 0;
   text-decoration: none;
   transition: text-decoration 0.2s ease;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
 
   &:hover {
     text-decoration: underline;

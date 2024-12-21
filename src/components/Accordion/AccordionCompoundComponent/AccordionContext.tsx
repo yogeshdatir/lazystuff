@@ -1,19 +1,26 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react';
 
-interface AccordionContextType {
+type AccordionContextType = {
   activeItems: string[];
   toggleItem: (id: string) => void;
   isItemActive: (id: string) => boolean;
-}
+};
 
 export const AccordionContext = createContext<AccordionContextType | undefined>(
   undefined
 );
 
-interface AccordionProviderProps {
+type AccordionProviderProps = {
   children: ReactNode;
   allowMultiple?: boolean;
-}
+};
 
 export const AccordionProvider = ({
   children,
@@ -21,27 +28,36 @@ export const AccordionProvider = ({
 }: AccordionProviderProps) => {
   const [activeItems, setActiveItems] = useState<string[]>([]);
 
-  const toggleItem = (id: string) => {
-    setActiveItems((prevItems) => {
-      if (prevItems.includes(id)) {
-        return prevItems.filter((item) => item !== id);
-      }
+  const toggleItem = useCallback(
+    (id: string) => {
+      setActiveItems((prevItems) => {
+        if (prevItems.includes(id)) {
+          return prevItems.filter((item) => item !== id);
+        }
 
-      if (allowMultiple) {
-        return [...prevItems, id];
-      }
+        if (allowMultiple) {
+          return [...prevItems, id];
+        }
 
-      return [id];
-    });
-  };
+        return [id];
+      });
+    },
+    [allowMultiple]
+  );
 
-  const isItemActive = (id: string) => activeItems.includes(id);
+  const isItemActive = useCallback(
+    (id: string) => activeItems.includes(id),
+    [activeItems]
+  );
 
-  const value = {
-    activeItems,
-    toggleItem,
-    isItemActive,
-  };
+  const value = useMemo(
+    () => ({
+      activeItems,
+      toggleItem,
+      isItemActive,
+    }),
+    [activeItems, toggleItem, isItemActive]
+  );
 
   return (
     <AccordionContext.Provider value={value}>
