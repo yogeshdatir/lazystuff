@@ -1,5 +1,5 @@
 import React, { InputHTMLAttributes, ReactNode, useState } from 'react';
-import CheckedIcon from '../../assets/icons8-done.svg';
+import CheckedIcon from '../../assets/icons8-done.svg?react';
 import { CheckedIconContainer, Label } from './Checkbox.styled';
 
 const Checkbox = () => {

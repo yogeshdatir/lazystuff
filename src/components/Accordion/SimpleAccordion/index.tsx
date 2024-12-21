@@ -5,11 +5,11 @@ import {
   AccordionContainer,
   AccordionDivider,
 } from './Accordion.styled';
-import ArrowDown from '../../assets/icon-arrow-down.svg';
+import ArrowDown from '../../../assets/icon-arrow-down.svg?react';
 
 interface IProps {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
 }
 
 const Accordion = ({ title, content }: IProps) => {

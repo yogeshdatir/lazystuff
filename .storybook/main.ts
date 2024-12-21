@@ -14,6 +14,18 @@ const config: StorybookConfig = {
   framework: {
     name: "@storybook/react-vite",
     options: {},
+  }, 
+  
+  core: {
+    builder: '@storybook/builder-vite',
+  },
+
+  viteFinal: async (config) => {
+    // Ensure sourcemaps are handled correctly
+    config.build = config.build || {};
+    config.build.sourcemap = true;
+    
+    return config;
   },
 
   docs: {},
