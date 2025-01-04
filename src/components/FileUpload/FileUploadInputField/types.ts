@@ -6,6 +6,7 @@ export interface FileUploadProps {
   disabled?: boolean;
   onFilesSelected?: (files: File[]) => void;
   onError?: (errors: Array<{ name: string; error: string }>) => void;
+  required?: boolean;
 }
 
 export interface UploadedFile {

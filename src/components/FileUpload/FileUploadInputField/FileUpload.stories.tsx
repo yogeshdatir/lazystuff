@@ -61,6 +61,10 @@ export const ImageUpload: Story = {
     accept: '.jpg,.png,.gif',
     multiple: true,
     onFilesSelected: action('files-selected'),
+    required: true,
+    onError: (errors) => {
+      console.log(errors);
+    },
   },
 };
 
