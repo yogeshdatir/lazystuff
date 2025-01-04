@@ -58,7 +58,7 @@ export const MultipleFiles: Story = {
 // Image upload only
 export const ImageUpload: Story = {
   args: {
-    accept: '.jpg,.png,.gif',
+    accept: 'image/*',
     multiple: true,
     onFilesSelected: action('files-selected'),
     required: true,

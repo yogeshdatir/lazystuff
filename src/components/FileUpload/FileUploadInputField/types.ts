@@ -1,13 +1,13 @@
-export interface FileUploadProps {
+export type FileUploadProps = {
   multiple?: boolean;
   accept?: string;
   maxSize?: number;
-  maxFiles?: number;
-  disabled?: boolean;
   onFilesSelected?: (files: File[]) => void;
   onError?: (errors: Array<{ name: string; error: string }>) => void;
+  maxFiles?: number;
+  disabled?: boolean;
   required?: boolean;
-}
+};
 
 export interface UploadedFile {
   id: string;
