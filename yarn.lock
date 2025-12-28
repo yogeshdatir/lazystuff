@@ -1302,6 +1302,18 @@
     "@svgr/hast-util-to-babel-ast" "8.0.0"
     svg-parser "^2.0.4"
 
+"@tanstack/query-core@5.90.13":
+  version "5.90.13"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.90.13.tgz#746cce64903c08297dab0780d26a3b41b26c9745"
+  integrity sha512-3VzxSkv4ojPPHu0WfOwZ/W5CuN7evAXPzQS+Py2glGxk59Wp+k2T/wgRfrgXAcX1kCTvD9RYUcVEHkMXkEN5jw==
+
+"@tanstack/react-query@^5.90.13":
+  version "5.90.13"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.90.13.tgz#52fe6e725170ef6342a08c7c82b1e90516145516"
+  integrity sha512-i6DY9wnghE0ghHJfDrnnFNatn4CNBzMZv4xPzKB7Lb9zMAoImAxPKoGK9gLOm79aopDa07p6ytlFFWotvwj3DQ==
+  dependencies:
+    "@tanstack/query-core" "5.90.13"
+
 "@testing-library/dom@10.4.0":
   version "10.4.0"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-10.4.0.tgz#82a9d9462f11d240ecadbf406607c6ceeeff43a8"
